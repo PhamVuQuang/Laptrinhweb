@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="vi">
+    <head>
+        <meta charset="utf-8">
+        <title>Đăng Nhập</title>
+        <style>
+        body{
+            margin:0;
+            height:100vh;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        .login{
+            width:380px;
+            padding:35px;
+            background:rgba(255,255,255,0.92);
+            border-radius:12px;
+            box-shadow:0 10px 25px rgba(0,0,0,0.25);
+        }
+        /* ===== TIÊU ĐỀ ===== */
+        .login h3{
+            text-align:center;
+            font-size:28px;
+            margin-bottom:20px;
+            color:#2c3e50;
+        }
+        /* ===== LABEL ===== */
+        .login__label{
+            display:block;
+            margin-top:10px;
+            font-weight:bold;
+        }
+        /* ===== INPUT ===== */
+        .login__input{
+            width:100%;
+            height:36px;
+            margin-top:6px;
+            padding:0 10px;
+            border-radius:8px;
+            border:1px solid #ccc;
+            outline:none;
+            transition:0.3s;
+        }
+        .login__input:focus{
+            border-color:#4facfe;
+            box-shadow:0 0 6px rgba(79,172,254,0.5);
+        }
+        .captcha-box{
+            margin:10px 0;
+            font-weight:bold;
+            font-size:18px;
+            letter-spacing:3px;
+            background:#eee;
+            padding:8px;
+            border-radius:8px;
+            text-align:center;
+        }
+        .captcha-row{
+            display:flex;
+            align-items:center;
+            gap:8px;
+            margin-top:6px;
+        }
+        .captcha-row .login__input{
+            margin-top:0;
+            flex:1;
+        }
+        .btn-refresh-captcha{
+            height:36px;
+            min-width:70px;
+            border:none;
+            background:#4facfe;
+            color:white;
+            border-radius:8px;
+            cursor:pointer;
+            padding:0 12px;
+        }
+        .btn-refresh-captcha:hover{
+            background:#2f92ef;
+        }
+        /* ===== BUTTON ===== */
+        .login__dn{
+            width:100%;
+            height:40px;
+            margin-top:12px;
+            border:none;
+            border-radius:20px;
+            background:linear-gradient(135deg,#4facfe,#00c6ff);
+            color:white;
+            font-size:15px;
+            cursor:pointer;
+            transition:0.3s;
+        }
+        .login__dn:hover{
+            transform:translateY(-2px);
+            box-shadow:0 5px 12px rgba(0,0,0,0.2);
+        }
+        /* ===== QUÊN MẬT KHẨU ===== */
+        body{
+            margin:0;
+            min-height:100vh;
+            background: linear-gradient(270deg,#4facfe,#00f2fe,#43e97b);
+            background-size:600% 600%;
+            animation: gradientMove 12s ease infinite;
+        }
+        @keyframes gradientMove{
+            0%{background-position:0% 50%;}
+            50%{background-position:100% 50%;}
+            100%{background-position:0% 50%;}
+        }
+        .forgot-password{
+            text-align:right;
+            margin-top:6px;
+        }
+        .forgot-password a{
+            text-decoration:none;
+            font-size:14px;
+            color:#3498db;
+            transition:0.3s;
+        }
+        .forgot-password a:hover{
+            text-decoration:underline;
+            color:#1d6fa5;
+        }
+        .back-link{
+            display:block;
+            text-align:center;
+            margin-top:12px;
+            text-decoration:none;
+            color:#007bff;
+            font-weight:bold;
+        }
+        .back-link:hover{
+            text-decoration:underline;
+        }
+        </style>
+    </head>
+    <body>
+        <div class="login">
+            <form class="form__login">
+                <h3>Đăng Nhập</h3>
+                <label class="login__label">Tên Đăng Nhập :</label>
+                <input class="login__input" id="username" type="text" placeholder="Tên Đăng Nhập">
+                <label class="login__label">Mật Khẩu :</label>
+                <input class="login__input" id="password" type="password" placeholder="Mật Khẩu">
+                <label class="login__label">Captcha :</label>
+                <div id="captcha" class="captcha-box"></div>
+                <div class="captcha-row">
+                    <input class="login__input" id="captchaInput" type="text" placeholder="Nhập captcha">
+                    <button type="button" class="btn-refresh-captcha" onclick="generateCaptcha()">Đổi</button>
+                </div>
+            </form>
+                <div class="forgot-password">
+                <a href="/assets/html/forgot_password.html">Quên mật khẩu?</a>
+            </div>
+            <button class="login__dn" onclick="dangNhap()">Đăng Nhập</button>
+            <button class="login__dn" onclick="location.href='/assets/html/login_sbd.html'">
+                Đăng Nhập Bằng Số Báo Danh
+            </button>
+            <a href="/index.html" class="back-link">
+                ← Quay lại trang chủ
+                </a>
+        </div>
+        <script src="../../main.js"></script>
+        <script>
+            blockLoginPage();
+            generateCaptcha();
+        </script>
+    </body>
+</html>

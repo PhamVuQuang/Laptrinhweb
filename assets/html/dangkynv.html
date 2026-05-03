@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="vi">
+    <head>
+        <meta charset="UTF-8">
+        <title>Đăng Ký Nguyện Vọng</title>
+        <link rel="stylesheet" href="../css/base.css">
+        <link rel="stylesheet" href="../css/style.css">
+        <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+        <style>
+            body{
+                background: linear-gradient(135deg,#4facfe,#00f2fe);
+            }
+            .form-area{
+                width:900px;
+                margin:70px auto;
+                background:white;
+                padding:35px;
+                border-radius:12px;
+                box-shadow:0 8px 20px rgba(0,0,0,0.15);
+            }
+            .form-title{
+                text-align:center;
+                margin-bottom:25px;
+                color:#2c3e50;
+            }
+            table{
+                width:100%;
+                border-collapse:collapse;
+            }
+            td{
+                padding:14px;
+            }
+            .label{
+                width:35%;
+                font-weight:bold;
+                font-size:18px;
+                color:#2c3e50;
+            }
+            input,select{
+                width:100%;
+                padding:12px;
+                border-radius:6px;
+                border:1px solid #ccc;
+                font-size:16px;
+            }
+                input[readonly]{
+                    background:#f3f6f9;
+                    cursor:not-allowed;
+                }
+            input:focus,select:focus{
+                outline:none;
+                border-color:#3498db;
+            }
+            .btn-submit{
+                width:100%;
+                padding:14px;
+                border:none;
+                border-radius:25px;
+                background:linear-gradient(135deg,#4facfe,#00c6ff);
+                color:white;
+                font-size:17px;
+                cursor:pointer;
+                transition:0.3s;
+            }
+            .btn-submit:hover{
+                transform:translateY(-2px);
+                box-shadow:0 6px 15px rgba(0,0,0,0.2);
+            }
+            #ketqua table {
+                background: white;
+            }
+        </style>
+    </head>
+    <body>
+    <header>
+        <nav class="header">
+            <div class="header__navbar">
+                <div class="header__logo" id="logo">
+                      <img src="../img/logodetai1.png" alt="logo" class="logo__img">
+                </div>
+                <ul class="navbar__homepage">
+                <li class="navbar__page"
+                    onclick="location.href='../../index.html'">
+                    Trang Chủ
+                </li>
+                <li class="navbar__page navbar__drop">
+                     Tra Cứu
+                <div class="items__drop">
+                    <ul class="items__contai">
+                    <li class="navbar__items"
+                        onclick="location.href='tracuudiemthi.html'">
+                        Tra Cứu Điểm Thi
+                    </li>
+                    <li class="navbar__items"
+                        onclick="location.href='tracuunguyenvong.html'">
+                        Tra Cứu Nguyện Vọng
+                    </li>
+                    </ul>
+                </div>
+                </li>
+                    <li class="navbar__page">Đăng Kí Nguyện Vọng</li>
+                    <li class="navbar__page">Thanh Toán</li>
+                </ul>
+                <ul class="navbar__homepage navbar__page-right">
+                    <li class="navbar__page">
+                    <i class="fa-regular fa-bell navbar__user"></i>
+                    </li>
+                    <li class="navbar__page"
+                    onclick="location.href='login.html'">
+                    <i class="fa-solid fa-user navbar__user"></i>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+        <div class="form-area">
+            <h2 class="form-title">ĐĂNG KÝ NGUYỆN VỌNG XÉT TUYỂN</h2>
+            <table>
+                <tr>
+                    <td class="label">Số Báo Danh</td>
+                    <td><input type="text" id="sbdInput" placeholder="Số báo danh" readonly></td>
+                </tr>
+                <tr>
+                     <td class="label">Họ Và Tên</td>
+                     <td><input type="text" id="hotenInput" placeholder="Họ và tên" readonly></td>
+                </tr>
+                <tr>
+                    <td class="label">Trường Đại Học</td>
+                    <td>
+                        <select id="truongSelect" required onchange="loadNganh()">
+                            <option value="" selected disabled>-- Chọn Trường Đại Học --</option>
+                        </select>
+                     </td>
+                </tr>
+                <tr>
+                    <td class="label">Ngành Đăng Ký</td>
+                    <td>
+                        <select id="nganhSelect" required>
+                            <option value="" selected disabled>-- Chọn Ngành --</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                       <button class="btn-submit" onclick="dangKy()">Xác Nhận Đăng Ký</button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div id="ketqua" style="margin:30px auto; width:900px; display:none;">
+    <h3>Danh sách nguyện vọng đã đăng ký</h3>
+
+    <table border="1" width="100%" cellpadding="10">
+        <thead>
+            <tr>
+                <th>STT</th>
+                <th>Trường</th>
+                <th>Ngành</th>
+                <th>Tổ hợp</th>
+                <th>Thao tác</th>
+            </tr>
+        </thead>
+        <tbody id="dsNV"></tbody>
+    </table>
+</div>
+     <div class="end">
+            <div class="end__lastly">
+                <div class="end__title">
+                    <div class="end__logo">
+                        <img src="../img/logodetai1.png" class="logo__img">
+                    </div>
+                        <h3>Kết Nối Với Chúng Tôi</h3>
+                    <div class="icon">
+                        <a href="#"><i class="fa-brands fa-facebook"></i></a>
+                        <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="#"><i class="fa-brands fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="end__items">
+                    <h1 class="end__page">Liên Hệ Với Chúng Tôi</h1>
+                    <p>Điện Thoại: 0902.130.130</p>
+                    <p>Email: info@hcmunre.edu.vn</p>
+                    <p>236B Lê Văn Sỹ, TP. Hồ Chí Minh</p>
+                </div>
+                <div class="end__menber">
+                    <h3 class="menber">Thành Viên</h3>
+                    <p class="menber__name">Ngô Thanh Hoàng MSSV:1350080080</p>
+                    <p class="menber__name">Phạm Vũ Quảng MSSV:1350080221</p>
+                    <p class="menber__name">Nguyễn Mạnh Tiến MSSV:1350080288</p>
+                </div>
+            </div>
+            <p class="lastly">
+                © 2025 Demo Hệ thống Tra cứu điểm thi Đại học.
+            </p>
+        </div>
+    </body>
+    <script src="../../main.js"></script>
+<script>
+requireLogin();
+
+function fillStudentIdentity(){
+    const sbdInput = document.getElementById("sbdInput");
+    const hotenInput = document.getElementById("hotenInput");
+    if(!sbdInput || !hotenInput) return;
+
+    const sbd = String(localStorage.getItem("sbd") || "").trim();
+    const storedName = String(localStorage.getItem("userName") || "").trim();
+
+    if(sbd){
+        sbdInput.value = sbd;
+    }
+
+    if(storedName && storedName.toLowerCase() !== "thi sinh"){
+        hotenInput.value = storedName;
+    }
+
+    if(sbd){
+        loadHoTenTheoSbd(sbd);
+    }
+}
+
+// Load danh sách trường
+async function loadTruong(){
+    try {
+        const res = await fetch("/truongdaihoc", { cache: 'no-store' });
+        const truongs = await res.json();
+        const select = document.getElementById("truongSelect");
+        select.innerHTML = '<option value="" selected disabled>-- Chọn Trường Đại Học --</option>';
+        truongs.forEach(t => {
+            const option = document.createElement("option");
+            option.value = t.matruong;
+            option.textContent = t.tentruong;
+            select.appendChild(option);
+        });
+    } catch (err) {
+        console.error("Lỗi load trường:", err);
+    }
+}
+
+// Load ngành theo trường
+async function loadNganh(){
+    const matruong = document.getElementById("truongSelect").value;
+    if(!matruong) return;
+
+    try {
+        const res = await fetch(`/nganh/${matruong}`, { cache: 'no-store' });
+        const nganhs = await res.json();
+        const select = document.getElementById("nganhSelect");
+        select.innerHTML = '<option value="" selected disabled>-- Chọn Ngành --</option>';
+        if(!Array.isArray(nganhs) || nganhs.length === 0){
+            const option = document.createElement("option");
+            option.value = "";
+            option.disabled = true;
+            option.selected = true;
+            option.textContent = "Trường này chưa có ngành học";
+            select.appendChild(option);
+            return;
+        }
+        nganhs.forEach(n => {
+            const option = document.createElement("option");
+            option.value = n.manganh;
+            option.textContent = n.tennganh;
+            select.appendChild(option);
+        });
+    } catch (err) {
+        console.error("Lỗi load ngành:", err);
+    }
+}
+
+// Đăng ký nguyện vọng
+async function dangKy(){
+    const sbd = document.getElementById("sbdInput").value.trim();
+    const hoten = document.getElementById("hotenInput").value.trim();
+    const manganh = document.getElementById("nganhSelect").value;
+    const matruong = document.getElementById("truongSelect").value;
+
+    if(!sbd || !hoten || !manganh){
+        alert("Vui lòng nhập đầy đủ thông tin!");
+        return;
+    }
+
+    // Lấy số thứ tự nguyện vọng
+    const resNV = await fetch(`/nguyenvong/${sbd}`);
+    const nvList = await resNV.json();
+    if(Array.isArray(nvList) && nvList.some(nv => String(nv.manganh || "").trim() === manganh)){
+        alert("Nguyện vọng này đã được đăng ký, vui lòng chọn ngành khác!");
+        return;
+    }
+    const thutu = nvList.length + 1;
+
+    try {
+        const res = await fetch("/nguyenvong", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ sbd, hoten, manganh, thutu })
+        });
+
+        if(res.ok){
+            alert("Đăng ký nguyện vọng thành công!");
+            addNotification("Đăng ký nguyện vọng thành công");
+            try {
+                const refreshed = await fetch(`/nguyenvong/${sbd}`, { cache: 'no-store' });
+                if (refreshed.ok) {
+                    const nvList = await refreshed.json();
+                    localStorage.setItem("dsNV", JSON.stringify(nvList));
+                    localStorage.setItem("soNV", String(nvList.length));
+                }
+            } catch (syncErr) {
+                console.error("Lỗi đồng bộ nguyện vọng:", syncErr);
+            }
+            hienThiNV(sbd);
+        } else {
+            alert("Đăng ký thất bại!");
+        }
+    } catch (err) {
+        alert("Lỗi: " + err.message);
+    }
+}
+
+async function loadHoTenTheoSbd(value){
+    const sbd = String(value || document.getElementById("sbdInput").value || "").trim();
+    const hotenInput = document.getElementById("hotenInput");
+    if(!hotenInput) return;
+
+    if(!sbd){
+        hotenInput.value = "";
+        return;
+    }
+
+    try {
+        const res = await fetch(`/thisinh/${sbd}`, { cache: 'no-store' });
+        if(!res.ok) return;
+        const thisinh = await res.json();
+        if(thisinh && thisinh.hoten){
+            hotenInput.value = thisinh.hoten;
+        }
+    } catch (err) {
+        console.error("Lỗi load họ tên:", err);
+    }
+}
+
+// Hiển thị nguyện vọng đã đăng ký
+async function hienThiNV(sbd){
+    try {
+        const res = await fetch(`/nguyenvong/${sbd}`);
+        const nvList = await res.json();
+
+        const tbody = document.getElementById("dsNV");
+        tbody.innerHTML = "";
+
+        nvList.forEach((nv, index) => {
+            tbody.innerHTML += `
+                <tr>
+                    <td>${index + 1}</td>
+                    <td>${nv.tentruong}</td>
+                    <td>${nv.tennganh}</td>
+                    <td>${nv.monxettuyen || "Chưa cập nhật"}</td>
+                    <td>
+                        <button type="button" onclick="xoaNguyenVong('${sbd}', '${nv.manganh}')">Xóa</button>
+                    </td>
+                </tr>
+            `;
+        });
+
+        syncLocalNguyenVong(nvList);
+        document.getElementById("ketqua").style.display = "block";
+    } catch (err) {
+        console.error("Lỗi hiển thị NV:", err);
+    }
+}
+
+async function xoaNguyenVong(sbd, manganh){
+    if(!confirm("Bạn có chắc muốn xóa nguyện vọng này không?")){
+        return;
+    }
+
+    try {
+        const res = await fetch(`/nguyenvong/${encodeURIComponent(sbd)}/${encodeURIComponent(manganh)}`, {
+            method: "DELETE"
+        });
+
+        let data = {};
+        try {
+            data = await res.json();
+        } catch (_) {
+            data = {};
+        }
+
+        if(res.ok){
+            alert("Xóa nguyện vọng thành công!");
+            await hienThiNV(sbd);
+            return;
+        }
+
+        alert(data.message || "Không thể xóa nguyện vọng.");
+    } catch (err) {
+        alert("Lỗi: " + err.message);
+    }
+}
+
+function syncLocalNguyenVong(nvList){
+    const list = Array.isArray(nvList) ? nvList : [];
+    localStorage.setItem("dsNV", JSON.stringify(list));
+    localStorage.setItem("soNV", String(list.length));
+}
+
+// Auto-fill SBD từ localStorage
+const sbd = localStorage.getItem("sbd");
+if(sbd && sbd !== "-"){
+    fillStudentIdentity();
+    hienThiNV(sbd);
+}
+
+document.getElementById("sbdInput").addEventListener("change", function(){
+    loadHoTenTheoSbd(this.value);
+});
+
+loadTruong();
+fillStudentIdentity();
+</script>
+</html>

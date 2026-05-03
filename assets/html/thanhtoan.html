@@ -1,0 +1,269 @@
+
+<!DOCTYPE html>
+
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Thanh Toán</title>
+<link rel="stylesheet" href="../css/style.css">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<style>
+    body{
+    margin:0;
+    min-height:100vh;
+    background: linear-gradient(270deg,#4facfe,#00f2fe,#dee6e1);
+    background-size:600% 600%;
+    animation: gradientMove 12s ease infinite;
+}
+
+@keyframes gradientMove{
+    0%{background-position:0% 50%;}
+    50%{background-position:100% 50%;}
+    100%{background-position:0% 50%;}
+}
+
+
+    .payment-container{
+        width:600px;
+        margin:60px auto;
+        background:white;
+        padding:30px;
+        border-radius:12px;
+        font-size:18px;
+    }
+
+    h2{
+        text-align:center;
+        font-size:30px;
+        margin-bottom:20px;
+    }
+
+    .payment-container p{
+        font-size:18px;
+        line-height:1.6;
+    }
+
+    .method{
+        border:1px solid #ddd;
+        padding:15px;
+        margin:10px 0;
+        border-radius:8px;
+        cursor:pointer;
+        font-size:18px;
+    }
+
+    .method.active{
+        border:2px solid #3498db;
+        background:#ecf6ff;
+    }
+
+    .bank-options{
+        display:none;
+        margin:12px 0 16px;
+        gap:8px;
+        grid-template-columns:repeat(2, minmax(0, 1fr));
+    }
+
+    .bank-item{
+        border:1px solid #cfd8dc;
+        background:#fff;
+        color:#2c3e50;
+        border-radius:8px;
+        padding:8px 10px;
+        cursor:pointer;
+        font-size:14px;
+        transition:0.2s;
+        display:flex;
+        align-items:center;
+        gap:8px;
+        width:100%;
+        margin-top:0;
+        text-align:left;
+    }
+
+    .bank-logo{
+        width:28px;
+        height:28px;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        font-size:11px;
+        font-weight:700;
+        color:#0d47a1;
+        border:1px solid #bbdefb;
+        background:#e3f2fd;
+        line-height:1;
+        border-radius:4px;
+        flex-shrink:0;
+    }
+
+    .bank-item:hover{
+        border-color:#3498db;
+        color:#3498db;
+    }
+
+    .bank-item.active{
+        border-color:#3498db;
+        background:#ecf6ff;
+        color:#1b5e91;
+        font-weight:600;
+    }
+
+    .qr-box{
+        text-align:center;
+        margin-top:20px;
+        display:none;
+    }
+
+    .qr-box img{
+        width:200px;
+    }
+
+    .pay-btn{
+        width:100%;
+        padding:12px;
+        margin-top:20px;
+        background:#3498db;
+        color:white;
+        border:none;
+        border-radius:8px;
+        cursor:pointer;
+        font-size:18px;
+        font-weight:600;
+    }
+</style>
+
+</head>
+
+<body>
+
+<!-- ===== HEADER ===== -->
+
+ <header>
+        <nav class="header">
+            <div class="header__navbar">
+                <div class="header__logo" id="logo">
+                        <img src="../img/logodetai1.png" alt="logo" class="logo__img">
+                </div>
+                <ul class="navbar__homepage">
+                    <li class="navbar__page" data-link="index.html">Trang Chủ</li>
+                    <li class="navbar__page navbar__drop nav__separate">Tra Cứu
+                        <div class="items__drop">
+                            <ul class="items__contai">
+                                <li class="navbar__items" onclick="location.href='../assets/html/tracuudiemthi.html'">Tra Cứu Điểm Thi</li>
+                                <li class="navbar__items" onclick="location.href='/assets/html/tracuunguyenvong.html'">Tra Cứu Nguyện Vọng</li>
+                             </ul>
+                        </div>
+                    </li>
+                    <li class="navbar__page" data-link="../assets/html/dangkynv.html">Đăng Kí Nguyện Vọng</li>
+                    <li class="navbar__page" data-link="../assets/html/thanhtoan.html">Thanh Toán</li>
+                </ul>
+                <ul class="navbar__homepage navbar__page-right">
+                    <li class="navbar__page">
+                        <a href="" class="navbar__link"> 
+                            <i class="fa-regular fa-bell navbar__user"></i>
+                        </a>    
+                    </li>
+                    <li class="navbar__page" id="userMenu">
+                            <i class="fa-solid fa-user navbar__user"></i>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+<!-- ===== NỘI DUNG ===== -->
+
+<div class="payment-container">
+    <h2>THANH TOÁN NGUYỆN VỌNG</h2>
+<p>Số nguyện vọng: <b id="soNV"></b></p>
+<p>Số tiền: <b id="soTien"></b> VNĐ</p>
+<p><i>1 nguyện vọng = 10.000 VNĐ</i></p>
+
+<div class="method" onclick="chon(this,'momo')">Ví MoMo</div>
+<div class="method" onclick="chon(this,'zalopay')">ZaloPay</div>
+<div class="method" onclick="chon(this,'bank')">Ngân hàng</div>
+
+<div class="bank-options" id="bankOptions">
+    <button type="button" class="bank-item" onclick="chonNganHang(this, 'vietcombank')"><span class="bank-logo">VCB</span>Vietcombank</button>
+    <button type="button" class="bank-item" onclick="chonNganHang(this, 'techcombank')"><span class="bank-logo">TCB</span>Techcombank</button>
+    <button type="button" class="bank-item" onclick="chonNganHang(this, 'mbbank')"><span class="bank-logo">MBB</span>MB Bank</button>
+    <button type="button" class="bank-item" onclick="chonNganHang(this, 'bidv')"><span class="bank-logo">BIDV</span>BIDV</button>
+    <button type="button" class="bank-item" onclick="chonNganHang(this, 'agribank')"><span class="bank-logo">AGR</span>Agribank</button>
+    <button type="button" class="bank-item" onclick="chonNganHang(this, 'acb')"><span class="bank-logo">ACB</span>ACB</button>
+    <button type="button" class="bank-item" onclick="chonNganHang(this, 'vpbank')"><span class="bank-logo">VPB</span>VPBank</button>
+    <button type="button" class="bank-item" onclick="chonNganHang(this, 'sacombank')"><span class="bank-logo">STB</span>Sacombank</button>
+    <button type="button" class="bank-item" onclick="chonNganHang(this, 'tpbank')"><span class="bank-logo">TPB</span>TPBank</button>
+    <button type="button" class="bank-item" onclick="chonNganHang(this, 'hdbank')"><span class="bank-logo">HDB</span>HDBank</button>
+</div>
+
+<!-- QR -->
+<div class="qr-box" id="qrBox">
+    <img id="qrImg" src="">
+    <p id="qrText"></p>
+</div>
+
+<button class="pay-btn" onclick="thanhToan()">Xác nhận thanh toán</button>
+
+</div>
+
+<!-- ===== FOOTER ===== -->
+
+        <div class="end">
+                <div class="end__lastly">
+                    <div class="end__title">
+                        <div class="end__logo">
+                            <img src="../img/logodetai1.png" alt="" class="logo__img">
+                        </div>
+                        <h3>Kết Nối Với Chúng Tôi</h3>
+                        <div class="icon">
+                            <a href="https://www.facebook.com/hcmunre">
+                            <i class="fa-brands fa-facebook  icon__facebook" ></i>
+                            </a>
+                            <a href="https://hunre.edu.vn/">
+                                <i class="fa-brands fa-instagram icon__instagram"></i>
+                            </a>
+                            <a href="https://www.youtube.com/@hcmunre-aihoctainguyenvamo6444">
+                                <i class="fa-brands fa-youtube icon__youtube" style="color: #ff0000;"></i>
+                            </a>
+                        </div>
+                        <p></p><!--đoạn cuối chưa bt viết gì-->
+                    </div>
+                    <div class="end__items">
+                        <h1 class="end__page">Liên Hệ Với Chúng Tôi</h1>
+                        <p class="end__tel">
+                            <i class="fa-solid fa-phone" style="color: #74C0FC;"></i>
+                            Điện Thoại: 0902.130.130
+                        </p>
+                        <p class="end__email">
+                            <i class="fa-solid fa-envelope" style="color: #74C0FC;"></i>
+                            Email:info@hcmunre.edu.vn
+                        </p>
+                        <p class="end__map"> 
+                            <i class="fa-solid fa-location-dot" style="color: #74C0FC;"></i>
+                            236B Lê Văn Sỹ, Phường Tân Sơn Hòa, TP. Hồ Chí Minh
+                        </p>
+
+                    </div>
+                    <div class="end__menber">
+                        <h3 class="menber">Thành Viên</h3>
+                            <P class="menber__name">Ngô Thanh Hoàng MSSV:1350080080</P>
+                            <P class="menber__name">Phạm Vũ Quảng MSSV:1350080221</P>
+                            <P class="menber__name">Nguyễn Mạnh Tiến MSSV:1350080288</P>
+
+                    </div> 
+              </div> 
+                 <p class="lastly">© 2025 Demo Hệ thống Tra cứu điểm thi Đại học.</p>
+        </div>
+
+<script src="../../main.js"></script>
+<script>
+requireLogin();
+addNotification("Bạn đã Thanh Toán Thành Công");
+</script>
+
+</body>
+</html>
+

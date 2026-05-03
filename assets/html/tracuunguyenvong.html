@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="vi">
+    <head>
+        <meta charset="UTF-8">
+        <title>Tra Cứu Nguyện Vọng</title>
+        <link rel="stylesheet" href="../css/style.css">
+        <link rel="stylesheet" href="../css/base.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+        <style>
+        /* ===== NỀN ===== */
+        body{
+            background: linear-gradient(135deg,#4facfe,#00f2fe);
+        }
+        /* ===== KHUNG ===== */
+        .search-container{
+            width:750px;
+            margin:60px auto;
+            background:white;
+            padding:30px;
+            border-radius:12px;
+            box-shadow:0 8px 20px rgba(0,0,0,0.15);
+        }
+        .search-title{
+            text-align:center;
+            margin-bottom:20px;
+        }
+        /* input */
+        .search-box{
+            display:flex;
+            gap:10px;
+        }
+        .search-box input{
+            flex:1;
+            padding:12px;
+            border-radius:8px;
+            border:1px solid #ccc;
+        }
+        .search-box button{
+            padding:12px 20px;
+            border:none;
+            border-radius:8px;
+            background:#3498db;
+            color:white;
+            cursor:pointer;
+        }
+        .search-box button:hover{
+            background:#2980b9;
+        }
+        /* bảng */
+        .result{
+            margin-top:25px;
+            display:none;
+        }
+        table{
+            width:100%;
+            border-collapse:collapse;
+        }
+        th,td{
+            border:1px solid #ddd;
+            padding:10px;
+            text-align:center;
+        }
+        th{
+            background:#3498db;
+            color:white;
+        }
+        </style>
+    </head>
+<body>
+    <!-- ===== MENU (GIỐNG INDEX) ===== -->
+    <header>
+        <nav class="header">
+            <div class="header__navbar">
+                <div class="header__logo" id="logo">
+                      <img src="../img/logodetai1.png" alt="logo" class="logo__img">
+                </div>
+            <ul class="navbar__homepage">
+                <li class="navbar__page"
+                    onclick="location.href='../../index.html'">Trang Chủ
+                </li>
+                <li class="navbar__page navbar__drop">
+                    Tra Cứu
+                    <div class="items__drop">
+                        <ul class="items__contai">
+                            <li class="navbar__items"
+                                onclick="location.href='tracuudiemthi.html'">
+                                Tra Cứu Điểm Thi
+                            </li>
+                            <li class="navbar__items"
+                                onclick="location.href='tracuunguyenvong.html'">
+                                Tra Cứu Nguyện Vọng
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="navbar__page"
+                    onclick="location.href='dangkynv.html'">
+                    Đăng Kí Nguyện Vọng
+                </li>
+                <li class="navbar__page">Thanh Toán</li>
+            </ul>
+
+            <ul class="navbar__homepage navbar__page-right">
+                <li class="navbar__page">
+                    <i class="fa-regular fa-bell navbar__user"></i>
+                </li>
+                <li class="navbar__page"
+                    onclick="location.href='login.html'">
+                    <i class="fa-solid fa-user navbar__user"></i>
+                </li>
+            </ul>
+            </div>
+        </nav>
+    </header>
+    <!-- ===== NỘI DUNG ===== -->
+    <div class="search-container">
+        <h2 class="search-title">
+            <i class="fa-solid fa-list-check"></i>
+            TRA CỨU NGUYỆN VỌNG
+        </h2>
+        <div class="search-box">
+            <input type="text" id="sbd" placeholder="Nhập số báo danh">
+            <button onclick="traCuuNV()">Tra Cứu</button>
+        </div>
+        <div class="result" id="result">
+            <table>
+                <tr>
+                    <th>Nguyện Vọng</th>
+                    <th>Trường</th>
+                    <th>Ngành</th>
+                    <th>Tổ Hợp</th>
+                    <th>Trạng Thái</th>
+                </tr>
+                <tbody id="bangNV"></tbody>
+            </table>
+        </div>
+    </div>
+<!-- ===== FOOTER ===== -->
+<div class="end">
+    <div class="end__lastly">
+        <div class="end__title">
+            <div class="end__logo">
+                <img src="../img/logodetai1.png" class="logo__img">
+            </div>
+            <h3>Kết Nối Với Chúng Tôi</h3>
+            <div class="icon">
+                <a href="#"><i class="fa-brands fa-facebook"></i></a>
+                <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                <a href="#"><i class="fa-brands fa-youtube"></i></a>
+            </div>
+        </div>
+        <div class="end__items">
+            <h1 class="end__page">Liên Hệ Với Chúng Tôi</h1>
+            <p>Điện Thoại: 0902.130.130</p>
+            <p>Email: info@hcmunre.edu.vn</p>
+            <p>236B Lê Văn Sỹ, TP. Hồ Chí Minh</p>
+        </div>
+        <div class="end__menber">
+            <h3 class="menber">Thành Viên</h3>
+            <p class="menber__name">Ngô Thanh Hoàng MSSV:1350080080</p>
+            <p class="menber__name">Phạm Vũ Quảng MSSV:1350080221</p>
+            <p class="menber__name">Nguyễn Mạnh Tiến MSSV:1350080288</p>
+        </div>
+    </div>
+    <p class="lastly">© 2025 Demo Hệ thống Tra cứu điểm thi Đại học.</p>
+</div>
+<script>
+function getPaymentStatusList(sbd){
+    const raw = localStorage.getItem(`paymentStatus_${sbd}`);
+    if(!raw) return null;
+
+    try {
+        const parsed = JSON.parse(raw);
+        return Array.isArray(parsed) ? parsed : null;
+    } catch (_) {
+        return null;
+    }
+}
+
+function getTrangThaiNguyenVong(sbd, index){
+    const statusList = getPaymentStatusList(sbd);
+    if(statusList && statusList[index]){
+        return statusList[index];
+    }
+
+    if(localStorage.getItem(`paymentDone_${sbd}`) === "true"){
+        return index === 0 ? "Đậu" : "Trượt";
+    }
+
+    return "Chưa thanh toán";
+}
+
+async function traCuuNV(){
+    const sbd = document.getElementById("sbd").value.trim();
+
+    if(!sbd){
+        alert("Vui lòng nhập số báo danh!");
+        return;
+    }
+
+    try {
+        const res = await fetch("/nguyenvong");
+        if(!res.ok){
+            alert("Lỗi kết nối server!");
+            return;
+        }
+
+        const data = await res.json();
+
+        // Lọc theo SBD
+        const ds = data.filter(item =>
+            String(item.SBD || "").trim() === sbd
+        );
+
+        if(ds.length === 0){
+            alert("Không tìm thấy nguyện vọng cho số báo danh này!");
+            return;
+        }
+
+        let html = "";
+        ds.forEach((item, index) => {
+            const trangThai = getTrangThaiNguyenVong(sbd, index);
+            html += `
+                <tr>
+                    <td>${item.Thutu || 1}</td>
+                    <td>${item.tentruong || ""}</td>
+                    <td>${item.tennganh || ""}</td>
+                    <td>${item.monxettuyen || "Chưa cập nhật"}</td>
+                    <td>${trangThai}</td>
+                </tr>
+            `;
+        });
+
+        document.getElementById("bangNV").innerHTML = html;
+        document.getElementById("result").style.display = "block";
+
+    } catch (err) {
+        alert("Lỗi: " + err.message);
+    }
+}
+</script>
+<script src="../../main.js"></script>
+
+<script>
+requireLogin();
+</script>
+</body>
+</html>

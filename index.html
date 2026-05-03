@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<HTML>
+    <head>
+        <title> Tra Cứu Điểm Thi Đại Học </title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="assets/css/style.css">
+        <link rel="stylesheet" href="assets/css/base.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+        <link rel="stylesheet" href="assets/html/dangkynv.html">
+    </head>
+    <header>
+        <nav class="header">
+            <div class="header__navbar">
+                <div class="header__logo" id="logo">
+                      <img src="assets/img/logodetai1.png" alt="logo" class="logo__img">
+                </div>
+                <ul class="navbar__homepage">
+                    <li class="navbar__page" data-link="index.html">Trang Chủ</li>
+                    <li class="navbar__page navbar__drop nav__separate">Tra Cứu
+                        <div class="items__drop">
+                            <ul class="items__contai">
+                                <li class="navbar__items" onclick="location.href='assets/html/tracuudiemthi.html'">Tra Cứu Điểm Thi</li>
+                                <li class="navbar__items" onclick="location.href='assets/html/tracuunguyenvong.html'">Tra Cứu Nguyện Vọng</li>
+                             </ul>
+                        </div>
+                    </li>
+                    <li class="navbar__page" data-link="assets/html/dangkynv.html">Đăng Kí Nguyện Vọng</li>
+                    <li class="navbar__page" data-link="thanhtoan.html">Thanh Toán</li>
+                </ul>
+                <ul class="navbar__homepage navbar__page-right">
+                   <li class="navbar__page navbar__notify">
+                        <i class="fa-regular fa-bell navbar__user"></i>
+                        <div class="notify-box" id="notifyBox">
+                            <ul id="notifyList">
+                                <li class="empty">Chưa có thông báo</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="navbar__page" id="userMenu">
+                            <i class="fa-solid fa-user navbar__user"></i>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+    <body>
+        <!--first-->
+        <div class="body__face">
+            <div class="body__face-items">
+                <h1 class="body__title">
+                <i class="fa-solid fa-graduation-cap"></i>
+                    Chào Mừng Đến Với Hệ Thống Tra Cứu Điểm Thi Đại Học Trực Tuyến
+                </h1>
+                <p class="body__write">
+                    Trong thời đại chuyển đổi số, việc tiếp cận thông tin nhanh chóng và chính xác đóng vai trò vô cùng quan trọng đối với mỗi thí sinh. Hệ thống Tra cứu điểm thi Đại học trực tuyến được xây dựng với mục tiêu hỗ trợ thí sinh kiểm tra kết quả thi một cách thuận tiện, minh bạch và dễ dàng chỉ trong vài bước đơn giản.
+                </p>   
+                <p class="body__write">
+                    Website cung cấp giao diện thân thiện, dễ sử dụng, phù hợp với mọi đối tượng người dùng. Chỉ cần nhập số báo danh và thông tin xác thực, hệ thống sẽ nhanh chóng hiển thị chi tiết điểm từng môn, tổng điểm xét tuyển cũng như các thông tin liên quan. Nhờ đó, thí sinh có thể chủ động theo dõi kết quả, lên kế hoạch đăng ký nguyện vọng và định hướng tương lai học tập của mình.
+                </p>
+                <p class="body__write">
+                    Khác với các cổng thông tin chính thức mang tính quản lý tổng hợp, hệ thống này tập trung vào trải nghiệm người dùng, tối ưu tốc độ xử lý và đảm bảo bảo mật dữ liệu cá nhân.
+                    Chúng tôi luôn hướng tới việc tạo ra một môi trường tra cứu hiện đại, chính xác và tiện lợi.
+                </p>
+
+                <p class="body__write">Hy vọng rằng nền tảng này sẽ trở thành người bạn đồng hành đáng tin cậy của các bạn thí sinh trong giai đoạn quan trọng của cuộc đời. Không chỉ đơn thuần là một công cụ tra cứu điểm số, hệ thống còn hướng đến việc hỗ trợ các bạn trong quá trình đưa ra quyết định lựa chọn ngành học, trường học và định hướng tương lai phù hợp với năng lực của bản thân.
+                </p>
+                <p class="body__write">
+                    Chúng tôi tin rằng mỗi kết quả đạt được đều là thành quả của quá trình nỗ lực không ngừng nghỉ. Vì vậy, website này được xây dựng với mong muốn mang đến sự thuận tiện, minh bạch và động lực tích cực cho các bạn sau khi biết điểm thi của mình. Dù kết quả ra sao, đó cũng là bước khởi đầu cho một chặng đường mới với nhiều cơ hội và thử thách phía trước.
+                </p>
+                <p class="body__write">
+                    Chúc các bạn luôn giữ vững niềm tin, tự tin vào khả năng của bản thân và mạnh dạn theo đuổi ước mơ. Thành công không chỉ nằm ở một kỳ thi, mà còn ở sự cố gắng bền bỉ và tinh thần không ngừng học hỏi trong tương lai.
+                </p>
+            </div>
+            <div class="body__container-items">
+                <div class="body__face-container">
+                    <div class="container__items-notifi">
+                            <p class="container__items-write">
+                                <i class="fa-solid fa-school university"></i>Lịch các kỳ thi riêng của một số trường</p>
+                            <ul class="container__items-face notifi__body">Trong năm 2024, nhiều trường đại học đã tổ chức các kỳ thi tuyển sinh riêng ngoài kỳ thi tốt nghiệp THPT để xét tuyển ứng viên như:
+                                <li class="container__face-items">Đại học Bách khoa Hà Nội, Trường Đại học Ngân hàng TP. HCM, Đại học Sư phạm kỹ thuật TP. HCM… tổ chức các đợt xét tuyển theo hình thức thi năng lực/thi riêng kéo dài nhiều ngày trong năm. <a href="https://baonghean.vn/en/cac-truong-dai-hoc-cong-bo-lich-thi-chinh-thuc-cac-ky-thi-rieng-nam-2024-10252120.html?utm_source=chatgpt.com " class="body__link">Xem Thêm Tại Đây</a></li>
+                                <li class="container__face-items"> Các cơ sở này thường chia thành nhiều vòng thi ở các tỉnh thành khác nhau để thuận tiện thí sinh tham dự. <a href="https://baonghean.vn/en/cac-truong-dai-hoc-cong-bo-lich-thi-chinh-thuc-cac-ky-thi-rieng-nam-2024-10252120.html?utm_source=chatgpt.com " class="body__link">Xem Thêm Tại Đây</a></li>
+                            </ul>
+                            <p class=" container__notifi">Các kỳ thi này nhằm đánh giá năng lực trực tiếp của thí sinh theo yêu cầu của từng trường, có thể dùng để xét tuyển song song với phương thức khác.</p>
+                    </div>
+                </div>
+                    <div class="body__face-notifi">
+                        <ol class="body__notifi-container">
+                            <li class="body__notifi-items notifi__navbar">Lịch thi và tổ chức kỳ thi đầu tiên mùa tuyển sinh
+                                <ul class="items__notifi notifi__navbar-items">Một trong những kỳ thi thu hút nhiều thí sinh là kỳ thi đánh giá tư duy do Đại học Bách khoa Hà Nội tổ chức.
+                                    <li class="items__notifi-items">Hơn 2.800 thí sinh tham dự kỳ thi mở màn ngày 3/12/2023, đánh dấu chính thức bắt đầu mùa tuyển sinh đại học 2024.</li>
+                                    <li class="items__notifi-items">Trường dự kiến tổ chức 6 đợt thi khác nhau từ cuối 2023 đến giữa năm 2024 tại nhiều tỉnh thành trên cả nước</li>
+                                </ul>
+                                <p class="items__notifi-items  container__container">Đây là kỳ thi được nhiều trường đánh giá cao để xét tuyển vào ngành kỹ thuật, công nghệ, kinh tế…</p>
+                            </li>
+                            <li class="body__notifi-items notifi__navbar">Thông báo tuyển sinh đại học năm 2025
+                                <ul class="items__notifi notifi__navbar-items">Đại học Khoa học Xã hội và Nhân văn, Đại học Quốc gia Hà Nội đã công bố kế hoạch tuyển sinh chính quy năm 2025 với nhiều phương thức xét tuyển như:
+                                    <li class="items__notifi-items">Xét tuyển trực tiếp & ưu tiên theo quy định chung</li>
+                                    <li class="items__notifi-items">Xét tuyển theo kết quả thi năng lực riêng</li>
+                                    <li class="items__notifi-items">Xét tuyển theo chứng chỉ quốc tế hoặc tổng hợp kết quả THPT</li>
+                                    <li class="items__notifi-items">Xét tuyển theo chứng chỉ quốc tế kết hợp với điểm thi THPT</li>
+                                </ul>
+                                <p class="items__notifi-items container__container">Mỗi phương thức có thời gian đăng ký và hạn nộp hồ sơ cụ thể khác nhau. <a href="https://ussh.vnu.edu.vn/eng/news/thong-bao/thong-bao-tuyen-sinh-dai-hoc-chinh-quy-nam-2025-22664.html?utm_source=chatgpt.com" class="body__link">Xem Thêm Tại đây</a></p>
+                            </li>
+                            <li class="body__notifi-items notifi__navbar">Ngưỡng điểm đảm bảo chất lượng đầu vào năm 2025
+                                <ul class="items__notifi notifi__navbar-items">
+                                    <li class="items__notifi-items">Nhiều trường đã công bố điểm sàn đầu vào dựa trên kết quả kỳ thi tốt nghiệp THPT 2025 để đảm bảo chất lượng đầu vào tại các ngành học.</li>
+                                    <li class="items__notifi-items">Ví dụ: một số ngành tại Đại học Khoa học Xã hội và Nhân văn, Đại học Quốc gia Hà Nội yêu cầu điểm sàn khoảng 20 điểm trở lên (theo tổ hợp xét tuyển tương ứng).</li>
+                                </ul>
+                            </li>
+                        </ol>
+                    </div>
+            </div>
+        </div>
+            <!--second-->
+        <div class="body__container">
+            <h1 class="container__items">
+                MỐC THỜI GIAN TUYỂN SINH</h1>
+            <div class="items-note-img">
+                <img src="assets/img/demolichthi.png" alt="" class="items__img">
+                <div class="items__note">
+                    <ul class="items__page">Công bố & Tra cứu điểm thi
+                        <li class="items__content">Thời Gian Mở Hệ Thống: 08h00 Ngày 15/07/2025</li>
+                        <li class="items__content">Thời Gian Kết Thúc Tra Cứu Đợt 1: 23h59 Ngày 25/07/2025</li>
+                        <li class="items__content">Thời Gian Nộp Đơn Phúc Khảo: 20/07/2025 - 25/07/2025</li>
+                        <li class="items__content">Thời Gian Công Bố Kết Quả Phúc Khảo: 01/08/2025</li>
+                    </ul>
+                    <ul class="items__page"> Đăng Ký & Điều Chỉnh Nguyện Vọng
+                        <li class="items__content">Thời Gian Bắt Đầu: 20/07/2025</li>
+                        <li class="items__content">Thời Gian Kết Thúc: 05/08/2025</li>
+                        <li class="items__content">Được Phép Thay Đổi, Bổ Sung, Sắp Xếp Lại Thứ Tự Nguyện Vọng Trong Thời Gian Quy Định</li>
+                        <li class="items__content">Sau 23h59 Ngày 05/08/2025 Hệ Thống Sẽ Tự Động Khóa Chức Năng Chỉnh Sửa.</li>
+                    </ul>
+                    <ul class="items__page">Thanh Toán Lệ Phí Xét Tuyển
+                        <li class="items__content">Thời Gian Thanh Toán Trực Tuyến: 22/07/2025 - 07/08/2025</li>
+                        <li class="items__content">Hình Thức: Thanh Toán Online Qua Cổng Ngân Hàng Hoặc Ví Điện Tử</li>
+                        <li class="items__content">Chỉ Những Nguyện Vọng Đã Thanh Toán Lệ Phí Mới Được Hệ Thống Ghi Nhận Hợp Lệ</li>
+                    </ul>
+                    <ul class="items__page">Công bố Kết Quả Trúng Tuyển
+                        <li class="items__content">Ngày Công Bố: 15/08/2025</li>
+                        <li class="items__content">Thí Sinh Đăng Nhập Để Xem Trạng Thái Trúng Tuyển Và Hướng Dẫn Nhập Học.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!--third-->
+        <div class="third">
+            <div class="third-page__items">
+                <h1 class="third__calendar">Điểm Trúng Tuyển Của Một Số Trường Đại Học Năm 2024</h1>
+                <p class="third__page"> Bảng Điểm Dưới Đây Chỉ Mang Tính Tổng Hợp Điểm Trúng Tuyển Của Một Số Trường Đại Học Của Năm 2024. Thí Sinh Vui Lòng Tham Khỏa Không Dựa Vào Điểm Này Để Xét Tuyển Đại Học. Các Trường Đại Học Sẽ Công Điểm Trúng Tuyển Vào Ngày 04/08/2025</p>
+            </div>
+            <div class="third__calendar-img">
+                <img src="assets/img/demobangdiem1.png" alt="" class="third__img1">
+                <img src="assets/img/demobangdiem2.png" alt="" class="third__img2">
+            </div>
+        </div>
+        <!--end-->
+        <div class="end">
+                <div class="end__lastly">
+                    <div class="end__title">
+                        <div class="end__logo">
+                            <img src="assets/img/logodetai1.png" alt="" class="logo__img">
+                        </div>
+                        <h3>Kết Nối Với Chúng Tôi</h3>
+                        <div class="icon">
+                            <a href="https://www.facebook.com/hcmunre">
+                            <i class="fa-brands fa-facebook  icon__facebook" ></i>
+                            </a>
+                            <a href="https://hunre.edu.vn/">
+                                <i class="fa-brands fa-instagram icon__instagram"></i>
+                            </a>
+                            <a href="https://www.youtube.com/@hcmunre-aihoctainguyenvamo6444">
+                                <i class="fa-brands fa-youtube icon__youtube" style="color: #ff0000;"></i>
+                            </a>
+                        </div>
+                        <p></p><!--đoạn cuối chưa bt viết gì-->
+                    </div>
+                    <div class="end__items">
+                        <h1 class="end__page">Liên Hệ Với Chúng Tôi</h1>
+                        <p class="end__tel">
+                            <i class="fa-solid fa-phone" style="color: #74C0FC;"></i>
+                            Điện Thoại: 0902.130.130
+                        </p>
+                        <p class="end__email">
+                            <i class="fa-solid fa-envelope" style="color: #74C0FC;"></i>
+                            Email:info@hcmunre.edu.vn
+                        </p>
+                        <p class="end__map"> 
+                            <i class="fa-solid fa-location-dot" style="color: #74C0FC;"></i>
+                            236B Lê Văn Sỹ, Phường Tân Sơn Hòa, TP. Hồ Chí Minh
+                        </p>
+
+                    </div>
+                    <div class="end__menber">
+                        <h3 class="menber">Thành Viên</h3>
+                            <P class="menber__name">Ngô Thanh Hoàng MSSV:1350080080</P>
+                            <P class="menber__name">Phạm Vũ Quảng MSSV:1350080221</P>
+                            <P class="menber__name">Nguyễn Mạnh Tiến MSSV:1350080288</P>
+
+                    </div> 
+              </div> 
+               <p class="lastly">© 2025 Demo Hệ thống Tra cứu điểm thi Đại học.</p>
+        </div>
+        <script src="main.js" src="server.js"></script>
+        <script>checkLoginStatus();</script>
+    </body>
+</HTML>

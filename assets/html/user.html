@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="vi">
+    <head>
+    <meta charset="UTF-8">
+    <title>Thông Tin Người Dùng</title>
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+        <style>
+        /* ===== BACKGROUND ===== */
+        body{
+            background: linear-gradient(135deg,#4facfe,#00f2fe);
+        }
+        /* ===== USER CARD ===== */
+        .user-container{
+            width:850px;
+            margin:70px auto;
+            background:white;
+            border-radius:14px;
+            padding:35px;
+            box-shadow:0 10px 25px rgba(0,0,0,0.15);
+        }
+        .user-title{
+            text-align:center;
+            margin-bottom:25px;
+            color:#2c3e50;
+        }
+        /* layout */
+        .user-info{
+            display:grid;
+            grid-template-columns:150px 1fr;
+            gap:20px;
+            align-items:center;
+        }
+        /* avatar */
+        .avatar{
+            width:130px;
+            height:130px;
+            border-radius:50%;
+            object-fit:cover;
+            border:4px solid #4facfe;
+        }
+        /* table info */
+        .info-table{
+            width:100%;
+        }
+        .info-table td{
+            padding:10px;
+            font-size:17px;
+        }
+        .label{
+            font-weight:bold;
+            width:40%;
+            color:#2c3e50;
+        }
+        /* button */
+        .user-actions{
+            margin-top:25px;
+            display:flex;
+            gap:15px;
+            justify-content:center;
+        }
+        .btn{
+            padding:12px 25px;
+            border:none;
+            border-radius:25px;
+            color:white;
+            cursor:pointer;
+            font-size:15px;
+        }
+        .btn-edit{
+            background:#3498db;
+        }
+        .btn-logout{
+            background:#e74c3c;
+        }
+        .btn:hover{
+            opacity:0.85;
+        }
+        .edit-panel{
+            margin-top:30px;
+            padding:22px;
+            border:1px solid #dbeafe;
+            border-radius:14px;
+            background:#f8fbff;
+            display:none;
+        }
+        .edit-panel h3{
+            margin-bottom:16px;
+            color:#2c3e50;
+        }
+        .edit-grid{
+            display:grid;
+            grid-template-columns:repeat(2,minmax(0,1fr));
+            gap:14px;
+        }
+        .field label{
+            display:block;
+            margin-bottom:6px;
+            font-weight:600;
+            color:#2c3e50;
+        }
+        .field input{
+            width:100%;
+            padding:11px 12px;
+            border:1px solid #cbd5e1;
+            border-radius:10px;
+            font-size:15px;
+        }
+        .field input:focus{
+            outline:none;
+            border-color:#3498db;
+            box-shadow:0 0 0 3px rgba(52,152,219,0.12);
+        }
+        .edit-actions{
+            margin-top:18px;
+            display:flex;
+            gap:12px;
+            justify-content:flex-end;
+        }
+        .edit-note{
+            margin-top:10px;
+            color:#64748b;
+            font-size:14px;
+        }
+        </style>
+    </head>
+    <body>
+        <!-- ================= MENU ================= -->
+        <header>
+            <nav class="header">
+                <div class="header__navbar">
+                    <div class="header__logo" id="logo">
+                      <img src="../img/logodetai1.png" alt="logo" class="logo__img">
+                    </div>
+                    <ul class="navbar__homepage">
+                        <li class="navbar__page"
+                            onclick="location.href='../../index.html'">Trang Chủ</li>
+                        <li class="navbar__page navbar__drop">
+                            Tra Cứu
+                        <div class="items__drop">
+                            <ul class="items__contai">
+                                <li class="navbar__items"
+                                    onclick="location.href='tracuudiemthi.html'">
+                                    Tra Cứu Điểm Thi</li>
+                                <li class="navbar__items"
+                                    onclick="location.href='tracuunguyenvong.html'">
+                                    Tra Cứu Nguyện Vọng</li>
+                            </ul>
+                        </div>
+                        </li>
+                        <li class="navbar__page"
+                        onclick="location.href='dangkynv.html'">
+                        Đăng Kí Nguyện Vọng</li>
+                        <li class="navbar__page">Thanh Toán</li>
+                    </ul>
+                    <ul class="navbar__homepage navbar__page-right">
+                        <li class="navbar__page">
+                            <i class="fa-regular fa-bell navbar__user"></i>
+                        </li>
+                        <li class="navbar__page">
+                            <i class="fa-solid fa-user navbar__user"></i>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <!-- ================= USER ================= -->
+        <div class="user-container">
+            <h2 class="user-title">
+                <i class="fa-solid fa-user"></i>
+                THÔNG TIN THÍ SINH
+            </h2>
+            <div class="user-info">
+                <img src="../img/user.png" class="avatar">
+                <table class="info-table">
+                    <tr>
+                        <td class="label">Họ và tên:</td>
+                        <td id="userNameCell">-</td>
+                    </tr>
+                    <tr>
+                        <td class="label">Số báo danh:</td>
+                        <td id="userSbdCell">-</td>
+                    </tr>
+                    <tr>
+                        <td class="label">Ngày sinh:</td>
+                        <td id="userDobCell">-</td>
+                    </tr>
+                    <tr>
+                        <td class="label">CCCD:</td>
+                        <td id="userCccdCell">-</td>
+                    </tr>
+                    <tr>
+                        <td class="label">Điện thoại:</td>
+                        <td id="userPhoneCell">-</td>
+                    </tr>
+                    <tr>
+                        <td class="label">Quê quán:</td>
+                        <td id="userQuequanCell">-</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="user-actions">
+                <button class="btn btn-edit" type="button" onclick="toggleEditForm()">Chỉnh sửa thông tin</button>
+                <button class="btn btn-logout" onclick="logout()">
+                    Đăng xuất
+                </button>
+            </div>
+            <div class="edit-panel" id="editPanel">
+                <h3>Chỉnh sửa thông tin cá nhân</h3>
+                <div class="edit-grid">
+                    <div class="field">
+                        <label for="editHoten">Họ và tên</label>
+                        <input type="text" id="editHoten">
+                    </div>
+                    <div class="field">
+                        <label for="editNgaysinh">Ngày sinh</label>
+                        <input type="date" id="editNgaysinh">
+                    </div>
+                    <div class="field">
+                        <label for="editCccd">CCCD</label>
+                        <input type="text" id="editCccd">
+                    </div>
+                    <div class="field">
+                        <label for="editSdt">Điện thoại</label>
+                        <input type="text" id="editSdt">
+                    </div>
+                    <div class="field" style="grid-column:1 / -1;">
+                        <label for="editQuequan">Quê quán</label>
+                        <input type="text" id="editQuequan">
+                    </div>
+                </div>
+                <div class="edit-actions">
+                    <button class="btn btn-edit" type="button" onclick="saveUserInfo()">Lưu thay đổi</button>
+                    <button class="btn btn-logout" type="button" onclick="toggleEditForm(false)">Hủy</button>
+                </div>
+                <div class="edit-note">Chỉ tài khoản đang đăng nhập mới có thể chỉnh sửa thông tin của chính mình.</div>
+            </div>
+        </div>
+        <!-- ================= FOOTER ================= -->
+        <div class="end">
+            <div class="end__lastly">
+                <div class="end__title">
+                    <div class="end__logo">
+                        <img src="../img/logodetai1.png" class="logo__img">
+                    </div>
+                        <h3>Kết Nối Với Chúng Tôi</h3>
+                    <div class="icon">
+                        <a href="#"><i class="fa-brands fa-facebook"></i></a>
+                        <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="#"><i class="fa-brands fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="end__items">
+                    <h1 class="end__page">Liên Hệ Với Chúng Tôi</h1>
+                    <p>Điện Thoại: 0902.130.130</p>
+                    <p>Email: info@hcmunre.edu.vn</p>
+                    <p>236B Lê Văn Sỹ, TP. Hồ Chí Minh</p>
+                </div>
+                <div class="end__menber">
+                    <h3 class="menber">Thành Viên</h3>
+                    <p class="menber__name">Ngô Thanh Hoàng MSSV:1350080080</p>
+                    <p class="menber__name">Phạm Vũ Quảng MSSV:1350080221</p>
+                    <p class="menber__name">Nguyễn Mạnh Tiến MSSV:1350080288</p>
+                </div>
+            </div>
+            <p class="lastly">
+                 © 2025 Demo Hệ thống Tra cứu điểm thi Đại học.
+            </p>
+        </div>
+        <script src="../../main.js"></script>
+        <script>
+            let currentUserInfo = null;
+
+            requireLogin();
+
+            function syncEditForm(user){
+                currentUserInfo = user || null;
+                const hoten = document.getElementById("editHoten");
+                const ngaysinh = document.getElementById("editNgaysinh");
+                const cccd = document.getElementById("editCccd");
+                const sdt = document.getElementById("editSdt");
+                const quequan = document.getElementById("editQuequan");
+                if(!hoten || !ngaysinh || !cccd || !sdt || !quequan) return;
+
+                hoten.value = user?.hoten || localStorage.getItem("userName") || "";
+                ngaysinh.value = user?.ngaysinh ? String(user.ngaysinh).slice(0, 10) : "";
+                cccd.value = user?.CCCD || "";
+                sdt.value = user?.sdt || "";
+                quequan.value = user?.quequan || "";
+            }
+
+            function toggleEditForm(forceOpen){
+                const panel = document.getElementById("editPanel");
+                if(!panel) return;
+                const shouldOpen = typeof forceOpen === "boolean" ? forceOpen : panel.style.display === "none" || panel.style.display === "";
+                panel.style.display = shouldOpen ? "block" : "none";
+                if(shouldOpen && !currentUserInfo){
+                    syncEditForm({
+                        hoten: document.getElementById("userNameCell").innerText,
+                        ngaysinh: document.getElementById("userDobCell").innerText,
+                        CCCD: document.getElementById("userCccdCell").innerText,
+                        sdt: document.getElementById("userPhoneCell").innerText,
+                        quequan: document.getElementById("userQuequanCell").innerText
+                    });
+                }
+            }
+
+            async function saveUserInfo(){
+                const sbd = localStorage.getItem("sbd");
+                if(!sbd || sbd === "-"){
+                    alert("Không tìm thấy SBD để cập nhật thông tin!");
+                    return;
+                }
+
+                const payload = {
+                    hoten: document.getElementById("editHoten").value.trim(),
+                    ngaysinh: document.getElementById("editNgaysinh").value,
+                    cccd: document.getElementById("editCccd").value.trim(),
+                    sdt: document.getElementById("editSdt").value.trim(),
+                    quequan: document.getElementById("editQuequan").value.trim()
+                };
+
+                if(!payload.hoten || !payload.ngaysinh || !payload.cccd || !payload.sdt || !payload.quequan){
+                    alert("Vui lòng nhập đầy đủ thông tin cần cập nhật!");
+                    return;
+                }
+
+                try {
+                    const res = await fetch(`/thisinh/${sbd}`, {
+                        method: "PUT",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(payload)
+                    });
+
+                    const data = await res.json().catch(() => ({}));
+                    if(!res.ok){
+                        alert(data.message || "Cập nhật thất bại!");
+                        return;
+                    }
+
+                    document.getElementById("userNameCell").innerText = payload.hoten;
+                    document.getElementById("userDobCell").innerText = payload.ngaysinh;
+                    document.getElementById("userCccdCell").innerText = payload.cccd;
+                    document.getElementById("userPhoneCell").innerText = payload.sdt;
+                    document.getElementById("userQuequanCell").innerText = payload.quequan;
+                    localStorage.setItem("userName", payload.hoten);
+                    syncEditForm(payload);
+                    toggleEditForm(false);
+                    alert("Cập nhật thông tin thành công!");
+                } catch (err) {
+                    alert("Lỗi cập nhật: " + err.message);
+                }
+            }
+
+            async function loadUserInfo(){
+                const sbd = localStorage.getItem("sbd");
+                if(!sbd || sbd === "-"){
+                    document.getElementById("userNameCell").innerText = localStorage.getItem("userName") || "-";
+                    document.getElementById("userSbdCell").innerText = "-";
+                    syncEditForm({ hoten: localStorage.getItem("userName") || "" });
+                    return;
+                }
+
+                try {
+                    // Lấy thông tin thí sinh
+                    const res = await fetch(`/thisinh/${sbd}`);
+                    const thisinh = await res.json();
+
+                    if(thisinh){
+                        document.getElementById("userNameCell").innerText = thisinh.hoten || "-";
+                        document.getElementById("userSbdCell").innerText = thisinh.SBD || "-";
+                        document.getElementById("userDobCell").innerText = thisinh.ngaysinh || "-";
+                        document.getElementById("userCccdCell").innerText = thisinh.CCCD || "-";
+                        document.getElementById("userPhoneCell").innerText = thisinh.sdt || "-";
+                        document.getElementById("userQuequanCell").innerText = thisinh.quequan || "-";
+                        syncEditForm(thisinh);
+                    }
+                } catch (err) {
+                    console.error("Lỗi tải thông tin:", err);
+                    document.getElementById("userNameCell").innerText = localStorage.getItem("userName") || "-";
+                    document.getElementById("userSbdCell").innerText = sbd;
+                    syncEditForm({ hoten: localStorage.getItem("userName") || "" });
+                }
+            }
+
+            loadUserInfo();
+        </script>
+    </body>
+</html>

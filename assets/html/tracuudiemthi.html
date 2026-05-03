@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+        <meta charset="UTF-8">
+        <title>Tra Cứu Điểm Thi</title>
+        <link rel="stylesheet" href="../css/style.css">
+        <link rel="stylesheet" href="../css/base.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <style>
+
+        /* ===== NỀN ===== */
+        body{
+            background: linear-gradient(135deg,#4facfe,#00f2fe);
+        }
+
+        /* ===== KHUNG ===== */
+        .search-container{
+            width:700px;
+            margin:60px auto;
+            background:white;
+            padding:30px;
+            border-radius:12px;
+            box-shadow:0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        .search-title{
+            text-align:center;
+            margin-bottom:20px;
+            color:#2c3e50;
+        }
+
+        /* input */
+        .search-box{
+            display:flex;
+            gap:10px;
+        }
+
+        .search-box input{
+            flex:1;
+            padding:12px;
+            border-radius:8px;
+            border:1px solid #ccc;
+            font-size:16px;
+        }
+
+        .search-box button{
+            padding:12px 20px;
+            border:none;
+            border-radius:8px;
+            background:#3498db;
+            color:white;
+            cursor:pointer;
+        }
+
+        .search-box button:hover{
+            background:#2980b9;
+        }
+
+        /* bảng điểm */
+        .result{
+            margin-top:25px;
+            display:none;
+        }
+
+        table{
+            width:100%;
+            border-collapse:collapse;
+        }
+
+        th,td{
+            border:1px solid #ddd;
+            padding:10px;
+            text-align:center;
+        }
+
+        th{
+            background:#3498db;
+            color:white;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<!-- ===== MENU (copy từ index.html) ===== -->
+<header>
+    <nav class="header">
+        <div class="header__navbar">
+            <div class="header__logo" id="logo">
+                <img src="../img/logodetai1.png" alt="logo" class="logo__img">
+            </div>
+
+            <ul class="navbar__homepage">
+                <li class="navbar__page" onclick="location.href='../../index.html'">Trang Chủ</li>
+
+                <li class="navbar__page navbar__drop nav__separate">Tra Cứu
+                    <div class="items__drop">
+                        <ul class="items__contai">
+                            <li class="navbar__items" onclick="location.href='tracuudiemthi.html'">Tra Cứu Điểm Thi</li>
+                            <li class="navbar__items" onclick="location.href='tracuunguyenvong.html'">Tra Cứu Nguyện Vọng</li>
+                        </ul>
+                    </div>
+                </li>
+
+                <li class="navbar__page" onclick="location.href='dangkynv.html'">Đăng Kí Nguyện Vọng</li>
+                <li class="navbar__page" onclick="location.href='thanhtoan.html'">Thanh Toán</li>
+            </ul>
+
+            <!-- RIGHT MENU -->
+            <ul class="navbar__homepage navbar__page-right">
+                <li class="navbar__page">
+                    <a href="#" class="navbar__link"> 
+                        <i class="fa-regular fa-bell navbar__user"></i>
+                    </a>    
+                </li>
+                <li class="navbar__page" id="userMenu">
+                    <i class="fa-solid fa-user navbar__user"></i>
+                </li>
+            </ul>
+
+        </div>
+    </nav>
+</header>
+
+<!-- ===== NỘI DUNG ===== -->
+<div class="search-container">
+
+    <h2 class="search-title">TRA CỨU ĐIỂM THI</h2>
+
+    <div class="search-box">
+        <input type="text" id="sbd" placeholder="Nhập số báo danh">
+        <button onclick="traCuu()">Tra Cứu</button>
+    </div>
+
+    <!-- kết quả -->
+    <div class="result" id="result">
+        <table>
+            <tr>
+                <th>Họ Tên</th>
+                <th>Toán</th>
+                <th>Văn</th>
+                <th>Anh</th>
+                <th>Tổng</th>
+            </tr>
+
+            <tr>
+                <td id="ten"></td>
+                <td id="toan"></td>
+                <td id="van"></td>
+                <td id="anh"></td>
+                <td id="tong"></td>
+            </tr>
+        </table>
+    </div>
+</div>
+ <!--end-->
+        <div class="end">
+                <div class="end__lastly">
+                    <div class="end__title">
+                        <div class="end__logo">
+                            <img src="assets/img/logodetai1.png" alt="" class="logo__img">
+                        </div>
+                        <h3>Kết Nối Với Chúng Tôi</h3>
+                        <div class="icon">
+                            <a href="#">
+                            <i class="fa-brands fa-facebook  icon__facebook" ></i>
+                            </a>
+                            <a href="#">
+                                <i class="fa-brands fa-instagram icon__instagram"></i>
+                            </a>
+                            <a href="#">
+                                <i class="fa-brands fa-youtube icon__youtube" style="color: #ff0000;"></i>
+                            </a>
+                        </div>
+                        <p></p><!--đoạn cuối chưa bt viết gì-->
+                    </div>
+                    <div class="end__items">
+                        <h1 class="end__page">Liên Hệ Với Chúng Tôi</h1>
+                        <p class="end__tel">
+                            <i class="fa-solid fa-phone" style="color: #74C0FC;"></i>
+                            Điện Thoại: 0902.130.130
+                        </p>
+                        <p class="end__email">
+                            <i class="fa-solid fa-envelope" style="color: #74C0FC;"></i>
+                            Email:info@hcmunre.edu.vn
+                        </p>
+                        <p class="end__map"> 
+                            <i class="fa-solid fa-location-dot" style="color: #74C0FC;"></i>
+                            236B Lê Văn Sỹ, Phường Tân Sơn Hòa, TP. Hồ Chí Minh
+                        </p>
+
+                    </div>
+                    <div class="end__menber">
+                        <h3 class="menber">Thành Viên</h3>
+                            <P class="menber__name">Ngô Thanh Hoàng MSSV:1350080080</P>
+                            <P class="menber__name">Phạm Vũ Quảng MSSV:1350080221</P>
+                            <P class="menber__name">Nguyễn Mạnh Tiến MSSV:1350080288</P>
+
+                    </div> 
+              </div> 
+             <p class="lastly"> © 2025 Demo Hệ thống Tra cứu điểm thi Đại học.</p>
+
+<script>
+
+async function traCuu(){
+    const sbd = document.getElementById("sbd").value.trim();
+
+    if(!sbd){
+        alert("Vui lòng nhập số báo danh!");
+        return;
+    }
+
+    try {
+        // Lấy thông tin thí sinh
+        const resThisinh = await fetch(`/thisinh/${sbd}`);
+        if(!resThisinh.ok){
+            alert("Lỗi kết nối server!");
+            return;
+        }
+
+        const thisinh = await resThisinh.json();
+        if(!thisinh){
+            alert("Không tìm thấy số báo danh này!");
+            return;
+        }
+
+        // Lấy điểm thi
+        const resDiem = await fetch(`/diemthi/${sbd}`);
+        if(!resDiem.ok){
+            alert("Không thể lấy điểm thi!");
+            return;
+        }
+        const diemthi = await resDiem.json();
+
+        // Map điểm theo môn
+        const diemMap = {};
+        
+        if(diemthi && Array.isArray(diemthi)){
+            for(let i = 0; i < diemthi.length; i++){
+              const d = diemthi[i];
+              const diem = (d.diemsauphuckhao !== null && d.diemsauphuckhao !== undefined) ? d.diemsauphuckhao : d.diemthi;
+              diemMap[d.mamon] = diem;
+            }
+        }
+
+        document.getElementById("ten").innerText = thisinh.hoten || "";
+        document.getElementById("toan").innerText = diemMap['TOAN'] || 0;
+        document.getElementById("van").innerText = diemMap['VAN'] || 0;
+        document.getElementById("anh").innerText = diemMap['ANH'] || 0;
+        document.getElementById("tong").innerText =
+            Number(diemMap['TOAN'] || 0) + Number(diemMap['VAN'] || 0) + Number(diemMap['ANH'] || 0);
+
+        document.getElementById("result").style.display="block";
+
+    } catch (err) {
+        alert("Lỗi: " + err.message);
+    }
+}
+
+</script>
+<script src="../../main.js" src="server.js"></script>
+
+<script>
+addNotification("Đã tra cứu điểm thi");
+requireLogin();
+</script>
+</body>
+</html>

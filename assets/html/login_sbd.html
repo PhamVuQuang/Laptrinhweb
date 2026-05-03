@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="vi">
+    <head>
+        <meta charset="utf-8">
+        <title>Đăng Nhập Bằng Số Báo Danh</title>
+        <style>
+        body{
+            margin:0;
+            height:100vh;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            font-family: Arial, Helvetica, sans-serif;
+
+            background-image:url("assets/img/backgroundlogin.png");
+            background-size:cover;
+            background-position:center;
+        }
+        .login{
+            width:400px;
+            padding:35px;
+            background:rgba(255,255,255,0.92);
+            border-radius:12px;
+            box-shadow:0 10px 25px rgba(0,0,0,0.25);
+        }
+        body{
+            margin:0;
+            min-height:100vh;
+            background: linear-gradient(270deg,#4facfe,#00f2fe,#43e97b);
+            background-size:600% 600%;
+            animation: gradientMove 12s ease infinite;
+        }
+        @keyframes gradientMove{
+            0%{background-position:0% 50%;}
+            50%{background-position:100% 50%;}
+            100%{background-position:0% 50%;}
+        }
+        .login h3{
+            text-align:center;
+            font-size:26px;
+            margin-bottom:20px;
+            color:#2c3e50;
+        }
+        .login__label{
+            display:block;
+            margin-top:10px;
+            font-weight:bold;
+        }
+        .login__input{
+            width:100%;
+            height:36px;
+            margin-top:6px;
+            padding:0 10px;
+            border-radius:8px;
+            border:1px solid #ccc;
+            outline:none;
+            transition:0.3s;
+        }
+        .login__input:focus{
+            border-color:#4facfe;
+            box-shadow:0 0 6px rgba(79,172,254,0.5);
+        }
+        .captcha-box{
+            margin:10px 0;
+            font-weight:bold;
+            font-size:18px;
+            letter-spacing:3px;
+            background:#eee;
+            padding:8px;
+            border-radius:8px;
+            text-align:center;
+        }
+        .captcha-row{
+            display:flex;
+            align-items:center;
+            gap:8px;
+            margin-top:6px;
+        }
+        .captcha-row .login__input{
+            margin-top:0;
+            flex:1;
+        }
+        .btn-refresh-captcha{
+            height:36px;
+            min-width:70px;
+            border:none;
+            background:#4facfe;
+            color:white;
+            border-radius:8px;
+            cursor:pointer;
+            padding:0 12px;
+        }
+        .btn-refresh-captcha:hover{
+            background:#2f92ef;
+        }
+        .login__dn{
+            width:100%;
+            height:40px;
+            margin-top:14px;
+            border:none;
+            border-radius:20px;
+            background:linear-gradient(135deg,#4facfe,#00c6ff);
+            color:white;
+            font-size:15px;
+            cursor:pointer;
+            transition:0.3s;
+        }
+        .login__dn:hover{
+            transform:translateY(-2px);
+            box-shadow:0 5px 12px rgba(0,0,0,0.2);
+        }
+        .back{
+            text-align:center;
+            margin-top:10px;
+        }
+        .back a{
+            text-decoration:none;
+            color:#3498db;
+            font-size:14px;
+        }
+        .back a:hover{
+            text-decoration:underline;
+        }
+        </style>
+    </head>
+    <body>
+        <div class="login">
+            <form>
+                <h3>Đăng Nhập Bằng Số Báo Danh</h3>
+                <label class="login__label">Số Báo Danh</label>
+                <input class="login__input" id="sbd" type="text" placeholder="Nhập số báo danh">
+                <label class="login__label">CCCD / CMND</label>
+                <input class="login__input" id="cccd" type="text" placeholder="Nhập CCCD">
+                <label class="login__label">Captcha</label>
+                <div id="captcha" class="captcha-box"></div>
+                <div class="captcha-row">
+                    <input class="login__input" id="captchaInput" type="text" placeholder="Nhập captcha">
+                    <button type="button" class="btn-refresh-captcha" onclick="generateCaptcha()">Đổi</button>
+                </div>
+                <button type="button" class="login__dn"
+                onclick="dangNhapSBD()">
+                    Đăng Nhập Số Báo Danh
+                </button>
+            </form>
+            <div class="back" onclick="location.href='assets/html/login.html'">
+                <a href="login.html">← Quay lại đăng nhập</a>
+            </div>
+        </div>
+        <script src="../../main.js"></script>
+        <script>
+            blockLoginPage();
+            generateCaptcha();
+        </script>
+    </body>
+</html>
