@@ -1,0 +1,58 @@
+Msg 911, Level 16, State 1, Server LAPTOP-REF2UHST, Line 4
+Database 'tracuudiemthi' does not exist. Make sure that the name is entered correctly.
+
+(120 rows affected)
+
+(0 rows affected)
+
+(21 rows affected)
+
+(42 rows affected)
+
+(20 rows affected)
+
+(31 rows affected)
+
+(9 rows affected)
+
+(9 rows affected)
+
+(31 rows affected)
+
+(42 rows affected)
+Status                                Count      
+------------------------------------- -----------
+Step 1: Dữ liệu NGANH đã insert          42
+
+(1 rows affected)
+
+(20 rows affected)
+Status                                  Count      
+--------------------------------------- -----------
+Step 2: Dữ liệu THISINH đã insert          20
+
+(1 rows affected)
+
+(21 rows affected)
+Status                                   Count      
+---------------------------------------- -----------
+Step 3: Dữ liệu TAIKHOAN đã insert          21
+
+(1 rows affected)
+
+(120 rows affected)
+Status                          
+--------------------------------
+=== TỔNG HỢP DỮ LIỆU ===
+
+(1 rows affected)
+Table        Count      
+------------ -----------
+diemthi              120
+monthi                 9
+nganh                 42
+taikhoan              21
+thisinh               20
+truongdaihoc          31
+
+(6 rows affected)

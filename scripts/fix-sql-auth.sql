@@ -1,1 +1,0 @@
-SELECT SERVERPROPERTY('IsIntegratedSecurityOnly') AS IsIntegratedSecurityOnly;

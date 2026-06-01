@@ -494,6 +494,7 @@ body{
 /* tiêu đề */
 .menber{
     margin-bottom:12px;
+    margin-left: 120px;
 }
 
 /* tên thành viên */
@@ -544,7 +545,78 @@ body{
     background-size:600% 600%;
     animation: gradientMove 12s ease infinite;
 }
-
+.bank-options{
+        display:none;
+        margin:12px 0 16px;
+        gap:8px;
+        grid-template-columns:repeat(2, minmax(0, 1fr));
+}
+.bank-item{
+    border:1px solid #cfd8dc;
+    background:#fff;
+    color:#2c3e50;
+    border-radius:8px;
+    padding:8px 10px;
+    cursor:pointer;
+    font-size:14px;
+    transition:0.2s;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    width:100%;
+    margin-top:0;
+    text-align:left;
+    }
+.bank-logo-img {
+    width: 32px;
+    height: auto;
+    flex-shrink: 0;
+}
+.bank-item:hover{
+    border-color:#3498db;
+    color:#3498db;
+}
+.bank-item.active{
+    border-color:#3498db;
+    background:#ecf6ff;
+    color:#1b5e91;
+    font-weight:600;
+}
+.method-img {
+    width: 32px;
+    height: auto;
+    flex-shrink: 0;
+}
+.method.active {
+    border: 2px solid #3498db;
+    background: #ecf6ff;
+}
+.method:hover {
+    border-color: #3498db;
+} 
+.method {
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: 0.2s;
+}
+.method-img {
+    width: 32px;
+    height: auto;
+    flex-shrink: 0;
+}
+.method.active {
+    border: 2px solid #3498db;
+    background: #ecf6ff;
+}
+.method:hover {
+    border-color: #3498db;
+}
 @keyframes gradientMove{
     0%{background-position:0% 50%;}
     50%{background-position:100% 50%;}

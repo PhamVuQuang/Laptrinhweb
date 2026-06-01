@@ -1,0 +1,9 @@
+@echo off
+echo 🔄 Killing old Node processes...
+taskkill /F /IM node.exe 2>nul || echo No node processes to kill
+
+echo ⏳ Waiting for port to be released...
+timeout /t 2 /nobreak >nul
+
+echo 🚀 Starting server on port 3000...
+node server.js

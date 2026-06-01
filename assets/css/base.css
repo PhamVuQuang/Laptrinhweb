@@ -5,9 +5,9 @@
 
 }
 HTML{
-    font-size: 62.5%;
-    line-height:1.6rem;
-    font-family: serif;
+    font-size: 100%;
+    line-height: 1.6;
+    font-family: Arial, Helvetica, sans-serif;
     box-sizing:border-box;
     box-shadow:0 8px 25px rgba(0,0,0,0.08);
 }

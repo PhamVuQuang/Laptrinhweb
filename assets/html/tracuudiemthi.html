@@ -136,22 +136,14 @@
 
     <!-- kết quả -->
     <div class="result" id="result">
-        <table>
-            <tr>
-                <th>Họ Tên</th>
-                <th>Toán</th>
-                <th>Văn</th>
-                <th>Anh</th>
-                <th>Tổng</th>
-            </tr>
-
-            <tr>
-                <td id="ten"></td>
-                <td id="toan"></td>
-                <td id="van"></td>
-                <td id="anh"></td>
-                <td id="tong"></td>
-            </tr>
+        <table id="scoreTable">
+            <thead id="scoreTableHead">
+                <tr>
+                    <th>Họ Tên</th>
+                </tr>
+            </thead>
+            <tbody id="scoreTableBody"></tbody>
+            <tfoot id="scoreTableFoot"></tfoot>
         </table>
     </div>
 </div>
@@ -164,13 +156,13 @@
                         </div>
                         <h3>Kết Nối Với Chúng Tôi</h3>
                         <div class="icon">
-                            <a href="#">
+                            <a href="https://www.facebook.com/hcmunre">
                             <i class="fa-brands fa-facebook  icon__facebook" ></i>
                             </a>
-                            <a href="#">
+                            <a href="https://hunre.edu.vn/">
                                 <i class="fa-brands fa-instagram icon__instagram"></i>
                             </a>
-                            <a href="#">
+                            <a href="https://www.youtube.com/@hcmunre-aihoctainguyenvamo6444">
                                 <i class="fa-brands fa-youtube icon__youtube" style="color: #ff0000;"></i>
                             </a>
                         </div>
@@ -204,6 +196,13 @@
 
 <script>
 
+const apiBaseUrl = (function(){
+    if (window.location.protocol === 'file:' || window.location.origin === 'null' || !window.location.origin) {
+        return 'http://localhost:3000';
+    }
+    return window.location.origin;
+})();
+
 async function traCuu(){
     const sbd = document.getElementById("sbd").value.trim();
 
@@ -214,9 +213,9 @@ async function traCuu(){
 
     try {
         // Lấy thông tin thí sinh
-        const resThisinh = await fetch(`/thisinh/${sbd}`);
+        const resThisinh = await fetch(`${apiBaseUrl}/thisinh/${sbd}`);
         if(!resThisinh.ok){
-            alert("Lỗi kết nối server!");
+            alert("Lỗi kết nối server! Vui lòng mở trang qua http://localhost:3000 hoặc kiểm tra server.");
             return;
         }
 
@@ -227,32 +226,103 @@ async function traCuu(){
         }
 
         // Lấy điểm thi
-        const resDiem = await fetch(`/diemthi/${sbd}`);
+        const resDiem = await fetch(`${apiBaseUrl}/diemthi/${sbd}`);
         if(!resDiem.ok){
             alert("Không thể lấy điểm thi!");
             return;
         }
         const diemthi = await resDiem.json();
 
-        // Map điểm theo môn
+        // Map và chuẩn hoá điểm theo môn
         const diemMap = {};
-        
-        if(diemthi && Array.isArray(diemthi)){
-            for(let i = 0; i < diemthi.length; i++){
-              const d = diemthi[i];
-              const diem = (d.diemsauphuckhao !== null && d.diemsauphuckhao !== undefined) ? d.diemsauphuckhao : d.diemthi;
-              diemMap[d.mamon] = diem;
+
+        function normalizeScore(raw) {
+            if (raw === null || raw === undefined || raw === '') return 0;
+            const s = String(raw).trim().replace(',', '.');
+            let n = parseFloat(s);
+            if (isNaN(n)) return 0;
+            // Nếu dữ liệu trong DB được lưu nhân 10 (ví dụ 85 thay vì 8.5), chuẩn hoá về thang 0-10
+            while (n > 10) {
+                n = n / 10;
+            }
+            return Math.round(n * 100) / 100;
+        }
+
+        const subjectNameMap = {
+            TOAN: 'Toán',
+            VAN: 'Ngữ Văn',
+            ANH: 'Tiếng Anh',
+            LY: 'Vật Lý',
+            HOA: 'Hóa Học',
+            SINH: 'Sinh Học',
+            DIA: 'Địa Lý',
+            GDCD: 'Giáo Dục Công Dân',
+            LS: 'Lịch Sử',
+            NGOAINGU: 'Ngoại Ngữ'
+        };
+
+        function getDisplaySubjectName(mamon, tenmon) {
+            const code = String(mamon || '').toUpperCase();
+            if (subjectNameMap[code]) {
+                return subjectNameMap[code];
+            }
+            // Fix common mojibake in browser where UTF-8 bytes became Latin-1 string
+            function fixMojibakeBrowser(s) {
+                try {
+                    // decodeURIComponent(escape(s)) reinterprets Latin-1 bytes as UTF-8
+                    // eslint-disable-next-line no-undef
+                    return decodeURIComponent(escape(s));
+                } catch (e) {
+                    return s;
+                }
+            }
+
+            if (typeof tenmon === 'string' && tenmon.length > 0) {
+                const fixed = fixMojibakeBrowser(tenmon);
+                return fixed;
+            }
+            return code || tenmon || 'Unknown';
+        }
+
+        const subjectScores = [];
+        if (diemthi && Array.isArray(diemthi)) {
+            for (let i = 0; i < diemthi.length; i++) {
+                const d = diemthi[i];
+                const raw = (d.diemsauphuckhao !== null && d.diemsauphuckhao !== undefined) ? d.diemsauphuckhao : d.diemthi;
+                const val = normalizeScore(raw);
+                subjectScores.push({
+                    mamon: String(d.mamon || '').toUpperCase(),
+                    tenmon: getDisplaySubjectName(d.mamon, d.tenmon),
+                    score: val
+                });
             }
         }
 
-        document.getElementById("ten").innerText = thisinh.hoten || "";
-        document.getElementById("toan").innerText = diemMap['TOAN'] || 0;
-        document.getElementById("van").innerText = diemMap['VAN'] || 0;
-        document.getElementById("anh").innerText = diemMap['ANH'] || 0;
-        document.getElementById("tong").innerText =
-            Number(diemMap['TOAN'] || 0) + Number(diemMap['VAN'] || 0) + Number(diemMap['ANH'] || 0);
+        const head = document.getElementById('scoreTableHead');
+        const body = document.getElementById('scoreTableBody');
 
-        document.getElementById("result").style.display="block";
+        if (subjectScores.length === 0) {
+            head.innerHTML = '<tr><th>Họ Tên</th><th>Không có dữ liệu điểm</th></tr>';
+            body.innerHTML = `<tr><td>${thisinh.hoten || ''}</td><td>-</td></tr>`;
+            document.getElementById('result').style.display = 'block';
+            return;
+        }
+
+        let headerHtml = '<tr><th>Họ Tên</th>';
+        subjectScores.forEach((item) => {
+            headerHtml += `<th>${item.tenmon}</th>`;
+        });
+        headerHtml += '</tr>';
+        head.innerHTML = headerHtml;
+
+        let rowHtml = `<tr><td>${thisinh.hoten || ''}</td>`;
+        subjectScores.forEach((item) => {
+            rowHtml += `<td>${item.score}</td>`;
+        });
+        rowHtml += '</tr>';
+        body.innerHTML = rowHtml;
+
+        document.getElementById('result').style.display = 'block';
 
     } catch (err) {
         alert("Lỗi: " + err.message);
@@ -260,7 +330,7 @@ async function traCuu(){
 }
 
 </script>
-<script src="../../main.js" src="server.js"></script>
+<script src="/main.js"></script>
 
 <script>
 addNotification("Đã tra cứu điểm thi");

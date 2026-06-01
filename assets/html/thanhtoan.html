@@ -176,37 +176,82 @@
 
 <!-- ===== NỘI DUNG ===== -->
 
+<!-- ...existing code... -->
 <div class="payment-container">
     <h2>THANH TOÁN NGUYỆN VỌNG</h2>
-<p>Số nguyện vọng: <b id="soNV"></b></p>
-<p>Số tiền: <b id="soTien"></b> VNĐ</p>
-<p><i>1 nguyện vọng = 10.000 VNĐ</i></p>
+    <p>Số nguyện vọng: <b id="soNV"></b></p>
+    <p>Số tiền: <b id="soTien"></b> VNĐ</p>
+    <p><i>1 nguyện vọng = 10.000 VNĐ</i></p>
 
-<div class="method" onclick="chon(this,'momo')">Ví MoMo</div>
-<div class="method" onclick="chon(this,'zalopay')">ZaloPay</div>
-<div class="method" onclick="chon(this,'bank')">Ngân hàng</div>
+      <div class="methods-grid">
+        <div class="method" onclick="chon(this,'momo')">
+            <img src="../img_pay/LogoMOMO.webp" alt="MoMo" class="method-img">
+            Ví MoMo
+        </div>
+        <div class="method" onclick="chon(this,'zalopay')">
+            <img src="../img_pay/logoZaloPay.png" alt="ZaloPay" class="method-img">
+            ZaloPay
+        </div>
+        <div class="method" onclick="chon(this,'viettelpay')">
+            <img src="../img_pay/logoViettelPay.jpg" alt="ViettelPay" class="method-img">
+            ViettelPay
+        </div>
+        <div class="method" onclick="chon(this,'bank')">
+            <img src="../img_pay/logobank.png" alt="Ngân hàng" class="method-img">
+            Ngân hàng
+        </div>
+    </div>
 
-<div class="bank-options" id="bankOptions">
-    <button type="button" class="bank-item" onclick="chonNganHang(this, 'vietcombank')"><span class="bank-logo">VCB</span>Vietcombank</button>
-    <button type="button" class="bank-item" onclick="chonNganHang(this, 'techcombank')"><span class="bank-logo">TCB</span>Techcombank</button>
-    <button type="button" class="bank-item" onclick="chonNganHang(this, 'mbbank')"><span class="bank-logo">MBB</span>MB Bank</button>
-    <button type="button" class="bank-item" onclick="chonNganHang(this, 'bidv')"><span class="bank-logo">BIDV</span>BIDV</button>
-    <button type="button" class="bank-item" onclick="chonNganHang(this, 'agribank')"><span class="bank-logo">AGR</span>Agribank</button>
-    <button type="button" class="bank-item" onclick="chonNganHang(this, 'acb')"><span class="bank-logo">ACB</span>ACB</button>
-    <button type="button" class="bank-item" onclick="chonNganHang(this, 'vpbank')"><span class="bank-logo">VPB</span>VPBank</button>
-    <button type="button" class="bank-item" onclick="chonNganHang(this, 'sacombank')"><span class="bank-logo">STB</span>Sacombank</button>
-    <button type="button" class="bank-item" onclick="chonNganHang(this, 'tpbank')"><span class="bank-logo">TPB</span>TPBank</button>
-    <button type="button" class="bank-item" onclick="chonNganHang(this, 'hdbank')"><span class="bank-logo">HDB</span>HDBank</button>
-</div>
+    <div class="bank-options" id="bankOptions">
+        <button type="button" class="bank-item" onclick="chonNganHang(this, 'vietcombank')">
+            <img src="../img_pay/logoVietComBank.webp" alt="Vietcombank" class="bank-logo-img">
+            Vietcombank
+        </button>
+        <button type="button" class="bank-item" onclick="chonNganHang(this, 'techcombank')">
+            <img src="../img_pay/logoTechCombank.jpg" alt="Techcombank" class="bank-logo-img">
+            Techcombank
+        </button>
+        <button type="button" class="bank-item" onclick="chonNganHang(this, 'mbbank')">
+            <img src="../img_pay/logoMBbank.png" alt="MB Bank" class="bank-logo-img">
+            MB Bank
+        </button>
+        <button type="button" class="bank-item" onclick="chonNganHang(this, 'bidv')">
+            <img src="../img_pay/logoBIDV.webp" alt="BIDV" class="bank-logo-img">
+            BIDV
+        </button>
+        <button type="button" class="bank-item" onclick="chonNganHang(this, 'agribank')">
+            <img src="../img_pay/logoAgribank.png" alt="Agribank" class="bank-logo-img">
+            Agribank
+        </button>
+        <button type="button" class="bank-item" onclick="chonNganHang(this, 'acb')">
+            <img src="../img_pay/logoACB.jpg" alt="ACB" class="bank-logo-img">
+            ACB
+        </button>
+        <button type="button" class="bank-item" onclick="chonNganHang(this, 'vpbank')">
+            <img src="../img_pay/logoVPbank.webp" alt="VPBank" class="bank-logo-img">
+            VPBank
+        </button>
+        <button type="button" class="bank-item" onclick="chonNganHang(this, 'sacombank')">
+            <img src="../img_pay/logoSacombank.jpg" alt="Sacombank" class="bank-logo-img">
+            Sacombank
+        </button>
+        <button type="button" class="bank-item" onclick="chonNganHang(this, 'tpbank')">
+            <img src="../img_pay/LogoTPBank.webp" alt="TPBank" class="bank-logo-img">
+            TPBank
+        </button>
+        <button type="button" class="bank-item" onclick="chonNganHang(this, 'hdbank')">
+            <img src="../img_pay/logoHDbank.avif" alt="HDBank" class="bank-logo-img">
+            HDBank
+        </button>
+    </div>
 
-<!-- QR -->
-<div class="qr-box" id="qrBox">
-    <img id="qrImg" src="">
-    <p id="qrText"></p>
-</div>
+    <!-- QR -->
+    <div class="qr-box" id="qrBox">
+        <img id="qrImg" src="">
+        <p id="qrText"></p>
+    </div>
 
-<button class="pay-btn" onclick="thanhToan()">Xác nhận thanh toán</button>
-
+    <button class="pay-btn" onclick="thanhToan()">Xác nhận thanh toán</button>
 </div>
 
 <!-- ===== FOOTER ===== -->

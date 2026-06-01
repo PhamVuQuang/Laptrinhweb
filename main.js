@@ -23,7 +23,7 @@ async function dangNhap(){
     const captchaInput = captchaInputEl ? captchaInputEl.value.trim().toUpperCase() : "";
 
     if(!username || !password){
-        alert("Vui lòng nhập tài khoản và mật khẩu!");
+        alert("Vui lòng nhập tên tài khoản và mật khẩu!");
         return;
     }
 
@@ -353,6 +353,10 @@ const qrData = {
         img: "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=ZALOPAY_THANHTOAN",
         text: "Quét QR ZaloPay để thanh toán"
     },
+    viettelpay: {
+        img: "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=VIETTEL_PAY_THANHTOAN",
+        text: "Quét QR Viettel Pay để thanh toán"
+    },
     bank: {
         vietcombank: {
             img: "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=VCB_TRANSFER",
@@ -468,6 +472,8 @@ async function thanhToan(){
         addNotification("Da thanh toan le phi xet tuyen qua MoMo. So tien: " + soTien.toLocaleString() + " VND.");
     }else if(selected === "zalopay"){
         addNotification("Da thanh toan le phi xet tuyen qua ZaloPay. So tien: " + soTien.toLocaleString() + " VND.");
+    }else if(selected === "viettelpay"){
+        addNotification("Da thanh toan le phi xet tuyen qua Viettel Pay. So tien: " + soTien.toLocaleString() + " VND.");
     }
 
     savePaymentOutcome();
