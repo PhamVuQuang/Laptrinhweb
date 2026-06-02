@@ -2,7 +2,7 @@ const { execFileSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
-// Sample Vietnamese student names
+// Tên họ c mẫu
 const studentNames = [
     'Nguyễn Văn An', 'Trần Thị Bình', 'Phạm Minh Châu', 'Hoàng Đức Duy',
     'Vũ Thế Hiệp', 'Ngô Thanh Hoàng', 'Phạm Vũ Quảng', 'Nguyễn Mạnh Tiến',
@@ -45,7 +45,7 @@ async function main() {
     try {
         console.log('Creating tables...');
         
-        // Create all tables
+        // Tạo tất cả bảng
         const createTablesSQL = `
 USE tracuudiemthi;
 

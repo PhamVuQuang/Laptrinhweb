@@ -278,7 +278,7 @@ function getCachedNguyenVongCount(){
                 return dsNV.length;
             }
         } catch (_) {
-            // ignore malformed cache and fall through
+            // bỏ qua cache bị hỏng và tiếp tục
         }
     }
 
@@ -539,7 +539,7 @@ function loadNotificationsForCurrentAccount(){
                     localStorage.setItem(storageKey, JSON.stringify(list));
                 }
             } catch (_) {
-                // ignore malformed legacy data
+                // bỏ qua dữ liệu cũ bị hỏng
             }
         }
     }

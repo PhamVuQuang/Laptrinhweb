@@ -68,7 +68,7 @@ async function main() {
         console.log('Creating database...');
         await pool.query(`CREATE DATABASE tracuudiemthi`);
         
-        // Reconnect to new database
+        // Kết nối lại với cơ sở dữ liệu mới
         config.database = 'tracuudiemthi';
         const pool2 = new sql.ConnectionPool(config);
         await pool2.connect();

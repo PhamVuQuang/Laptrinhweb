@@ -28,17 +28,17 @@ app.use((req, res, next) => {
                 res.setHeader("Content-Type", String(cur) + "; charset=utf-8");
             }
 
-            // Apply deep fix to ensure mojibake is corrected
+            // Áp dụng fix sâu để đảm bảo mojibake được sửa
             try {
                 const fixedBody = deepFixStrings(body);
                 const jsonStr = JSON.stringify(fixedBody);
                 
-                // Debug: log first userinfo response to check if fixing happened
+                // Debug: ghi log phản hồi userinfo đầu tiên để kiểm tra fix đã xảy ra
                 if (body && body.SBD && typeof body.hoten === 'string') {
                     console.log(`[DEBUG] Middleware: hoten before fix: "${body.hoten}", after: "${fixedBody.hoten}"`);
                 }
 
-                // Send final UTF-8 JSON string
+                // Gửi chuỗi JSON UTF-8 cuối cùng
                 res.setHeader('Content-Length', Buffer.byteLength(jsonStr, 'utf8'));
                 return res.send(jsonStr);
             } catch (e) {
@@ -71,12 +71,12 @@ const dbName = (process.env.DB_NAME || "tracuudiemthi").trim();
 const dbUser = typeof process.env.DB_USER === "string" ? process.env.DB_USER.trim() : "";
 const dbPassword = typeof process.env.DB_PASSWORD === "string" ? process.env.DB_PASSWORD.trim() : "";
 const dbInstance = process.env.DB_INSTANCE || "";
-// Use direct mssql driver connection when possible, fallback to sqlcmd on auth errors
-// Windows Auth often fails on some systems, so sqlcmd fallback is useful
+// Sử dụng kết nối mssql driver trực tiếp nếu có thể, fallback đến sqlcmd khi lỗi xác thực
+// Windows Auth thường thất bại trên một số hệ thống, vì vậy fallback sqlcmd rất hữu ích
 const useSqlcmdFallback = true;
 const useIntegratedAuth = !dbUser && !dbPassword;
 
-// Schools to remove from web responses (also removed from dulieuthi.sql)
+// Các trường để xóa khỏi phản hồi web (cũng được xóa khỏi dulieuthi.sql)
 const removedMatruong = new Set(['CDCT','CDE','CDTD','HSU','IUH','MO','NTT','CTU','DHD']);
 
 function execFileAsync(file, args) {
@@ -121,11 +121,11 @@ function loadLocalLoginAccounts() {
 
 async function runSqlcmdQuery(query) {
     const tempFile = path.join(os.tmpdir(), `sqlcmd-${process.pid}-${crypto.randomBytes(6).toString("hex")}.txt`);
-    // Add USE statement instead of using -d flag to avoid auth issues
+    // Thêm câu lệnh USE thay vì sử dụng flag -d để tránh vấn đề xác thực
     const fullQuery = `USE ${dbName};\n${query}`;
     const args = [
         "-S", getSqlcmdServerTarget(),
-        "-E",  // Windows Authentication
+        "-E",  // Xác thực Windows
         "-w", "65535",
         "-y", "0",
         "-Y", "0",
@@ -136,7 +136,7 @@ async function runSqlcmdQuery(query) {
     try {
         await execFileAsync("sqlcmd", args);
         const buffer = fs.readFileSync(tempFile);
-        // Debug: show BOM/first bytes to help detect encoding issues
+        // Debug: hiển thị BOM/byte đầu tiên để giúp phát hiện vấn đề mã hóa
         try {
             const firstBytes = buffer.slice(0, 8);
             console.log('[DEBUG] sqlcmd temp file bytes (hex):', firstBytes.toString('hex'), 'len=', buffer.length);
@@ -144,35 +144,35 @@ async function runSqlcmdQuery(query) {
             // ignore
         }
 
-        // Try to detect BOM/encoding from the buffer and decode accordingly.
-        // Common BOMs: UTF-8 EF BB BF, UTF-16 LE FF FE, UTF-16 BE FE FF
+        // Cố gắng phát hiện BOM/mã hóa từ bộ đệm và giải mã tương ứng
+        // BOM phổ biến: UTF-8 EF BB BF, UTF-16 LE FF FE, UTF-16 BE FE FF
         let text = null;
         try {
             if (buffer && buffer.length >= 2) {
                 const b0 = buffer[0];
                 const b1 = buffer[1];
                 if (b0 === 0xFF && b1 === 0xFE) {
-                    // UTF-16 LE: skip BOM and decode using Node's built-in UTF-16LE decoder
-                    // Node's utf16le decoder handles UTF-16LE properly
+                    // UTF-16 LE: bỏ qua BOM và giải mã bằng bộ giải mã UTF-16LE tích hợp của Node
+                    // Bộ giải mã utf16le của Node xử lý UTF-16LE một cách chính xác
                     const withoutBom = buffer.slice(2);
                     text = withoutBom.toString("utf16le");
                     console.log('[DEBUG] Decoded as UTF-16LE, first 100 chars:', text.substring(0, 100).replace(/[\r\n]/g, '\\n'));
                 } else if (b0 === 0xFE && b1 === 0xFF) {
-                    // UTF-16 BE
+                    // UTF-16 BE (Big Endian)
                     const withoutBom = buffer.slice(2);
                     text = withoutBom.toString("utf16be");
                 } else if (buffer.length >= 3 && buffer[0] === 0xEF && buffer[1] === 0xBB && buffer[2] === 0xBF) {
-                    // UTF-8 with BOM
+                    // UTF-8 với BOM
                     text = buffer.toString("utf8");
                 } else {
-                    // Default to UTF-8 (most node/string handling expects UTF-8)
+                    // Mặc định là UTF-8 (hầu hết xử lý node/string mong đợi UTF-8)
                     text = buffer.toString("utf8");
                 }
             } else {
                 text = buffer.toString("utf8");
             }
         } catch (decErr) {
-            // Fallback: try UTF-16LE directly on full buffer, then UTF-8
+            // Fallback: thử UTF-16LE trực tiếp trên toàn bộ bộ đệm, sau đó UTF-8
             try {
                 console.log('[DEBUG] Decode error, trying fallback:', decErr.message);
                 text = buffer.toString("utf16le");
@@ -198,11 +198,11 @@ async function runSqlcmdQuery(query) {
 function extractJsonFromSqlcmdOutput(rawText) {
     const text = String(rawText || "");
 
-    // Don't aggressively replace newlines/control chars across the whole output
-    // because that can corrupt JSON keys/structure when whitespace appears
-    // between tokens. Instead, locate the JSON start/end in the raw output
-    // and return the substring as-is (trimmed). This preserves in-string
-    // whitespace and avoids creating malformed keys like " matruong".
+    // Không thay thế tích cực ký tự xuống dòng/kiểm soát trên toàn bộ đầu ra
+    // vì điều đó có thể làm hỏng khóa/cấu trúc JSON khi có khoảng trắng xuất hiện
+    // giữa các token. Thay vào đó, xác định vị trí bắt đầu/kết thúc JSON trong đầu ra thô
+    // và trả về chuỗi con nguyên vẹn (được cắt bớt). Điều này bảo toàn trong chuỗi
+    // khoảng trắng và tránh tạo khóa không đúng định dạng như " matruong".
     const startArr = text.indexOf("[");
     const endArr = text.lastIndexOf("]");
     if (startArr >= 0 && endArr > startArr) {
@@ -259,15 +259,15 @@ async function readSqlcmdJsonArray(query) {
         return [];
     }
         try {
-            // Escape control characters only inside JSON string literals so that
-            // JSON.parse won't fail on raw control bytes while preserving
-            // structural whitespace outside strings.
+            // Thoát các ký tự điều khiển chỉ bên trong các ký tự JSON để
+            // JSON.parse không thất bại trên byte điều khiển thô trong khi bảo toàn
+            // khoảng trắng cấu trúc bên ngoài chuỗi
             let cleaned = escapeControlCharsInJsonStrings(jsonText);
 
             try {
                 const parsed = JSON.parse(cleaned);
                 console.log("[readSqlcmdJsonArray] Parsed successfully, records:", Array.isArray(parsed) ? parsed.length : "single");
-                // Then apply fixUtf8Mojibake to the parsed data via deepFixStrings
+                // Sau đó áp dụng fixUtf8Mojibake cho dữ liệu được phân tích cú pháp qua deepFixStrings
                 return deepFixStrings(parsed);
             } catch(parseErr) {
                 console.error("[readSqlcmdJsonArray] JSON parse failed:", parseErr.message);
@@ -289,28 +289,28 @@ function normalizeSqlcmdLines(rawText) {
         .filter((line) => !/^-+$/.test(line));
 }
 
-// Try to fix common mojibake where UTF-8 bytes were misinterpreted as Latin1/UTF-16
+// Cố gắng sửa mojibake phổ biến trong đó byte UTF-8 bị hiểu nhầm là Latin1/UTF-16
 function fixUtf8Mojibake(value) {
     if (typeof value !== 'string' || value.length === 0) return value;
     
     try {
-        // Check if string has extended ASCII bytes (0x80-0xFF)
-        // Only attempt fixes when the string shows clear mojibake markers
-        // such as 'Ã', 'Â', '�', or box/line glyphs produced by double-encoding.
+        // Kiểm tra xem chuỗi có byte ASCII mở rộng (0x80-0xFF) không
+        // Chỉ cố gắng sửa khi chuỗi hiển thị các điểm đánh dấu mojibake rõ ràng
+        // chẳng hạn như 'Ã', 'Â', '�' hoặc các ký tự hộp/dòng được tạo ra bằng mã hóa kép.
         const hasVietnamese = /[àáảãạăằắẳẵặâầấẩẫậèéẻẽẹêềếểễệìíỉĩịòóỏõọôồốổỗộơờớởỡợùúủũụưừứửữựỳýỷỹỵđĐ]/i.test(value);
         const hasMojibakeMarkers = /(�|�|Ã|Â|Ä|Å|∩┐|┐╜|├|┤|╜)/.test(value);
 
-        // If there are no mojibake markers, don't touch the string (it's likely correct)
+        // Nếu không có điểm đánh dấu mojibake, đừng chạm vào chuỗi (có khả năng nó đúng)
         if (!hasMojibakeMarkers) return value;
 
-        // Generate candidate decodings
+        // Tạo các bản giải mã ứng viên
         const candidates = [value];
         try { candidates.push(Buffer.from(value, 'latin1').toString('utf8')); } catch(_) {}
         try { candidates.push(Buffer.from(value, 'utf8').toString('latin1')); } catch(_) {}
         try { candidates.push(Buffer.from(Buffer.from(value, 'latin1').toString('utf8'),'latin1').toString('utf8')); } catch(_) {}
         try { candidates.push(Buffer.from(value, 'utf16le').toString('utf8')); } catch(_) {}
 
-        // Scoring: prefer strings with Vietnamese letters and fewer mojibake glyphs / control chars
+        // Tính điểm: ưu tiên chuỗi có chữ cái tiếng Việt và ít ký tự mojibake/điều khiển hơn
         function score(s) {
             if (typeof s !== 'string') return -1000;
             const vietnamese = (s.match(/[àáảãạăằắẳẵặâầấẩẫậèéẻẽẹêềếểễệìíỉĩịòóỏõọôồốổỗộơờớởỡợùúủũụưừứửữựỳýỷỹỵđĐ]/gi) || []).length;
@@ -337,9 +337,9 @@ function fixUtf8Mojibake(value) {
     }
 }
 
-// Escape unescaped control characters that appear inside JSON string literals
-// by converting them to \u00XX escapes. This preserves JSON structure
-// while avoiding parse errors from raw control characters in sqlcmd output.
+// Thoát các ký tự điều khiển không được thoát xuất hiện bên trong các ký tự JSON
+// bằng cách chuyển đổi chúng thành thoát \u00XX. Điều này bảo toàn cấu trúc JSON
+// trong khi tránh lỗi phân tích cú pháp từ các ký tự điều khiển thô trong đầu ra sqlcmd.
 function escapeControlCharsInJsonStrings(text) {
     if (typeof text !== 'string' || text.length === 0) return text;
     let out = '';
@@ -380,8 +380,8 @@ function escapeControlCharsInJsonStrings(text) {
 }
 
 function deepFixStrings(obj) {
-    // Recursively walk parsed JSON and attempt to fix mojibake only when
-    // it looks like the string contains mis-decoded bytes.
+    // Đi bộ đệ quy qua JSON được phân tích cú pháp và cố gắng sửa mojibake chỉ khi
+    // có vẻ như chuỗi chứa các byte được giải mã sai.
     function fixValue(v) {
         if (v == null) return v;
         if (typeof v === 'string') {
@@ -467,13 +467,13 @@ function createSqlConfig({ useInstance = false, instanceName = "", usePort = tru
         cfg.port = dbPort;
     }
 
-    // Windows Authentication: when no user/password, use Windows credentials
-    // mssql driver will use NTLM automatically when user/password not provided
+    // Xác thực Windows: khi không có người dùng/mật khẩu, hãy sử dụng thông tin xác thực Windows
+    // trình điều khiển mssql sẽ sử dụng NTLM tự động khi không cung cấp người dùng/mật khẩu
     if (!dbUser && !dbPassword) {
-        // Don't explicitly set authentication - let mssql use Windows Auth by default
-        // Setting no user/password tells mssql to use OS credentials
+        // Không đặt xác thực rõ ràng - hãy để mssql sử dụng Windows Auth theo mặc định
+        // Không đặt người dùng/mật khẩu cho mssql biết sử dụng thông tin xác thực OS
     } else {
-        // SQL Server Authentication
+        // Xác thực SQL Server
         cfg.user = dbUser;
         cfg.password = dbPassword;
     }
@@ -866,6 +866,21 @@ app.put("/thisinh/:sbd", async (req, res) => {
         return res.status(400).json({ message: "Thiếu thông tin cập nhật bắt buộc" });
     }
 
+    // Tạo câu lệnh SQL để lưu vào file
+    const updateSqlForLog = `UPDATE thisinh SET hoten=N'${escapeSqlLiteral(hoten)}', ngaysinh=N'${escapeSqlLiteral(ngaysinh)}', CCCD=N'${escapeSqlLiteral(cccd)}', sdt=N'${escapeSqlLiteral(sdt)}', quequan=N'${escapeSqlLiteral(quequan||"")}', huyenCode=N'${escapeSqlLiteral(huyenCode||"")}', xaCode=N'${escapeSqlLiteral(xaCode||"")}', gender=N'${escapeSqlLiteral(gender||"")}', priorityCode=N'${escapeSqlLiteral(priorityCode||"")}', diachi=N'${escapeSqlLiteral(diachi||"")}', namthi=${namthi || "NULL"}, diadiemthi=N'${escapeSqlLiteral(diadiemthi||"")}' WHERE SBD=N'${escapeSqlLiteral(sbd)}'`;
+
+    // Ghi vào file updates.sql
+    const updatesFilePath = path.join(__dirname, "updates.sql");
+    const timestamp = new Date().toISOString();
+    const logContent = `-- Cập nhật ${timestamp} SBD=${sbd}\n${updateSqlForLog}\nGO\n\n`;
+    
+    try {
+        await fs.promises.appendFile(updatesFilePath, logContent, "utf8");
+        console.log(`[DEBUG] Logged update to updates.sql for SBD: ${sbd}`);
+    } catch (fileErr) {
+        console.log(`[DEBUG] Lỗi ghi file updates.sql:`, fileErr.message);
+    }
+
     try {
         const pool = await getPool();
         await pool.request()
@@ -907,10 +922,8 @@ app.put("/thisinh/:sbd", async (req, res) => {
         console.log(`[DEBUG] PUT error (pool):`, err.message);
         if (useSqlcmdFallback && isSqlAuthError(err)) {
             try {
-                // Build single-line UPDATE statement
-                const updateSql = `UPDATE thisinh SET hoten=N'${escapeSqlLiteral(hoten)}', ngaysinh=N'${escapeSqlLiteral(ngaysinh)}', CCCD=N'${escapeSqlLiteral(cccd)}', sdt=N'${escapeSqlLiteral(sdt)}', quequan=N'${escapeSqlLiteral(quequan||"")}', huyenCode=N'${escapeSqlLiteral(huyenCode||"")}', xaCode=N'${escapeSqlLiteral(xaCode||"")}', gender=N'${escapeSqlLiteral(gender||"")}', priorityCode=N'${escapeSqlLiteral(priorityCode||"")}', diachi=N'${escapeSqlLiteral(diachi||"")}', namthi=${namthi || "NULL"}, diadiemthi=N'${escapeSqlLiteral(diadiemthi||"")}' WHERE SBD=N'${escapeSqlLiteral(sbd)}'`;
-                console.log(`[DEBUG] PUT executing SQL:`, updateSql.substring(0, 150));
-                const updateResult = await runSqlcmdQuery(updateSql);
+                console.log(`[DEBUG] PUT executing SQL:`, updateSqlForLog.substring(0, 150));
+                const updateResult = await runSqlcmdQuery(updateSqlForLog);
                 console.log(`[DEBUG] PUT /thisinh/:sbd sqlcmd result for ${sbd}:`, updateResult.substring(0, 300));
                 return res.json({ message: "Cập nhật thành công", success: true });
             } catch (fallbackErr) {
@@ -925,7 +938,7 @@ app.put("/thisinh/:sbd", async (req, res) => {
 // LẤY ĐIỂM THI THEO SBD
 app.get("/diemthi/:sbd", async (req, res) => {
     const sbd = escapeSqlLiteral(req.params.sbd);
-    // Prefer direct driver (mssql) to avoid encoding issues from sqlcmd output.
+    // Ư u tiên driver trực tiếp (mssql) để tránh vấn đề mã hóa từ đầu ra sqlcmd.
     try {
         const pool = await getPool();
         const result = await pool.request()
@@ -942,7 +955,7 @@ app.get("/diemthi/:sbd", async (req, res) => {
             return res.json(fixed);
         }
 
-        // If driver returned no rows, fall back to sqlcmd (older systems may require it)
+        // Nếu driver không trả về hàng nào, quay lại sqlcmd (các hệ thống cũ có thể yêu cầu)
         if (useSqlcmdFallback) {
             const sbdEsc = escapeSqlLiteral(req.params.sbd);
             const qres = await querySqlcmdJson(`
@@ -961,10 +974,10 @@ app.get("/diemthi/:sbd", async (req, res) => {
             }
         }
 
-        // No data found
+        // Không tìm thấy dữ liệu
         return res.json([]);
     } catch (err) {
-        // As a last resort, try sqlcmd raw
+        // Như một lựa chọn cuối cùng, thử sqlcmd thô
         if (useSqlcmdFallback) {
             try {
                 const sbd = escapeSqlLiteral(req.params.sbd);
@@ -1004,80 +1017,229 @@ app.get("/diemthi", async (req, res) => {
     }
 });
 
-// LẤY NGUYỆN VỌNG
+// LẤY NGUYỆN VỌNG + LOGIC XÉT ĐẬU/TRƯỢT
 app.get("/nguyenvong", async (req, res) => {
-    const sqlcmdResult = await querySqlcmdJson(`
-        SELECT nv.SBD, nv.Thutu, t.tentruong, n.tennganh, n.monxettuyen
-        FROM nguyenvong nv
-        JOIN nganh n ON nv.manganh = n.manganh
-        JOIN truongdaihoc t ON n.matruong = t.matruong
-        FOR JSON PATH;
-    `, []);
-    if (sqlcmdResult.ok) {
-        return res.json(sqlcmdResult.payload);
-    }
-
     try {
         const pool = await getPool();
+        
+        // Lấy tất cả nguyện vọng
         const result = await pool.request().query(`
-            SELECT nv.SBD, nv.Thutu, t.tentruong, n.tennganh, n.monxettuyen
+            SELECT nv.SBD, nv.Thutu, nv.manganh, t.tentruong, n.tennganh, n.monxettuyen, n.diemchuan
             FROM nguyenvong nv
             JOIN nganh n ON nv.manganh = n.manganh
             JOIN truongdaihoc t ON n.matruong = t.matruong
+            ORDER BY nv.SBD, nv.Thutu
         `);
-        res.json(result.recordset);
+        
+        let nguyenVongList = result.recordset || [];
+        
+        // Lấy tất cả điểm thi để xét đậu/trượt
+        const diemThiAll = await pool.request().query(`
+            SELECT SBD, MaMon, DiemThi FROM diemthi
+        `);
+        
+        const diemThiByStudent = {};
+        (diemThiAll.recordset || []).forEach(d => {
+            if (!diemThiByStudent[d.SBD]) {
+                diemThiByStudent[d.SBD] = {};
+            }
+            diemThiByStudent[d.SBD][d.MaMon] = d.DiemThi;
+        });
+        
+        // Thêm trạng thái đậu/trượt
+        nguyenVongList = nguyenVongList.map(nv => {
+            const sbdKey = nv.SBD;
+            const diemThiMap = diemThiByStudent[sbdKey] || {};
+            const monXetTuyen = nv.monxettuyen || nv.MONXETTUYEN;
+            const diemChuan = nv.diemchuan || nv.DIEMCHUAN || 20;
+            const diemMon = diemThiMap[monXetTuyen] || 0;
+            const trangThai = diemMon >= diemChuan ? "Đậu" : "Trượt";
+            
+            return {
+                ...nv,
+                diemMon: diemMon,
+                diemChuan: diemChuan,
+                trangThai: trangThai
+            };
+        });
+        
+        return res.json(nguyenVongList);
     } catch (err) {
+        console.log(`[DEBUG] GET /nguyenvong error (pool):`, err.message);
+        
         if (useSqlcmdFallback && isSqlAuthError(err)) {
             try {
                 const out = await runSqlcmdQuery(`
                     SET NOCOUNT ON;
-                    SELECT nv.SBD, nv.Thutu, t.tentruong, n.tennganh, n.monxettuyen
+                    SELECT nv.SBD, nv.Thutu, nv.manganh, t.tentruong, n.tennganh, n.monxettuyen, n.diemchuan
                     FROM nguyenvong nv
                     JOIN nganh n ON nv.manganh = n.manganh
                     JOIN truongdaihoc t ON n.matruong = t.matruong
+                    ORDER BY nv.SBD, nv.Thutu
                     FOR JSON PATH;
                 `);
+                
                 const jsonText = extractJsonFromSqlcmdOutput(out);
-                const payload = jsonText ? JSON.parse(jsonText) : [];
-                return res.json(payload);
+                let nguyenVongList = jsonText ? JSON.parse(jsonText) : [];
+                
+                // Lấy tất cả điểm thi
+                const diemOut = await runSqlcmdQuery(`
+                    SET NOCOUNT ON;
+                    SELECT SBD, MaMon, DiemThi FROM diemthi FOR JSON PATH;
+                `);
+                
+                const diemJsonText = extractJsonFromSqlcmdOutput(diemOut);
+                const diemList = diemJsonText ? JSON.parse(diemJsonText) : [];
+                
+                const diemThiByStudent = {};
+                diemList.forEach(d => {
+                    const sbdKey = d.SBD || d.SBD;
+                    if (!diemThiByStudent[sbdKey]) {
+                        diemThiByStudent[sbdKey] = {};
+                    }
+                    diemThiByStudent[sbdKey][d.MaMon || d.MAMON] = d.DiemThi || d.DIEMTHI;
+                });
+                
+                // Thêm trạng thái
+                nguyenVongList = nguyenVongList.map(nv => {
+                    const sbdKey = nv.SBD || nv.SBD;
+                    const diemThiMap = diemThiByStudent[sbdKey] || {};
+                    const monXetTuyen = nv.monxettuyen || nv.MONXETTUYEN;
+                    const diemChuan = nv.diemchuan || nv.DIEMCHUAN || 20;
+                    const diemMon = diemThiMap[monXetTuyen] || 0;
+                    const trangThai = diemMon >= diemChuan ? "Đậu" : "Trượt";
+                    
+                    return {
+                        ...nv,
+                        diemMon: diemMon,
+                        diemChuan: diemChuan,
+                        trangThai: trangThai
+                    };
+                });
+                
+                return res.json(nguyenVongList);
             } catch (fallbackErr) {
+                console.log(`[DEBUG] GET /nguyenvong error (sqlcmd):`, fallbackErr.message);
                 return res.status(500).json({ message: formatDbError(fallbackErr) });
             }
         }
+        
         res.status(500).json({ message: formatDbError(err) });
     }
 });
 
-// LẤY NGUYỆN VỌNG THEO SBD
+// LẤY NGUYỆN VỌNG THEO SBD + LOGIC XÉT ĐẬU/TRƯỢT
 app.get("/nguyenvong/:sbd", async (req, res) => {
     const sbd = escapeSqlLiteral(req.params.sbd);
-    const sqlcmdResult = await querySqlcmdJson(`
-        SELECT nv.id, nv.SBD, nv.manganh, nv.Thutu, t.tentruong, n.tennganh, n.monxettuyen
-        FROM nguyenvong nv
-        JOIN nganh n ON nv.manganh = n.manganh
-        JOIN truongdaihoc t ON n.matruong = t.matruong
-        WHERE nv.SBD = N'${sbd}'
-        ORDER BY nv.Thutu
-        FOR JSON PATH;
-    `, []);
-    if (sqlcmdResult.ok) {
-        return res.json(sqlcmdResult.payload);
-    }
-
+    
     try {
         const pool = await getPool();
-        const result = await pool.request()
+        
+        // Lấy danh sách nguyện vọng của thí sinh
+        const nguyenVongResult = await pool.request()
             .input("sbd", sql.NVarChar, req.params.sbd)
             .query(`
-                SELECT nv.id, nv.SBD, nv.manganh, nv.Thutu, t.tentruong, n.tennganh, n.monxettuyen
+                SELECT nv.id, nv.SBD, nv.manganh, nv.Thutu, t.tentruong, n.tennganh, n.monxettuyen, n.diemchuan
                 FROM nguyenvong nv
                 JOIN nganh n ON nv.manganh = n.manganh
                 JOIN truongdaihoc t ON n.matruong = t.matruong
                 WHERE nv.SBD = @sbd
                 ORDER BY nv.Thutu
             `);
-        res.json(result.recordset);
+        
+        let nguyenVongList = nguyenVongResult.recordset || [];
+        
+        // Nếu có nguyện vọng, lấy điểm thi để xét đậu/trượt
+        if (nguyenVongList.length > 0) {
+            // Lấy điểm thi của thí sinh
+            const diemThiResult = await pool.request()
+                .input("sbd", sql.NVarChar, req.params.sbd)
+                .query(`
+                    SELECT MaMon, DiemThi FROM diemthi WHERE SBD = @sbd
+                `);
+            
+            const diemThiMap = {};
+            (diemThiResult.recordset || []).forEach(d => {
+                diemThiMap[d.MaMon] = d.DiemThi;
+            });
+            
+            // Thêm trạng thái đậu/trượt cho mỗi nguyện vọng
+            nguyenVongList = nguyenVongList.map(nv => {
+                const monXetTuyen = nv.monxettuyen || nv.MONXETTUYEN;
+                const diemChuan = nv.diemchuan || nv.DIEMCHUAN || 20;
+                const diemMon = diemThiMap[monXetTuyen] || 0;
+                
+                // Tính tổng điểm xét tuyển (có thể cộng 3 môn hoặc nhân 10 điểm môn chính)
+                // Ví dụ: tổng điểm = (điểm môn chính * 10) + tổng điểm 2 môn phụ
+                // Hoặc đơn giản: so sánh điểm môn chính với điểm chuyên ngành
+                const trangThai = diemMon >= diemChuan ? "Đậu" : "Trượt";
+                
+                return {
+                    ...nv,
+                    diemMon: diemMon,
+                    diemChuan: diemChuan,
+                    trangThai: trangThai
+                };
+            });
+        }
+        
+        return res.json(nguyenVongList);
     } catch (err) {
+        console.log(`[DEBUG] GET /nguyenvong/:sbd error (pool):`, err.message);
+        
+        if (useSqlcmdFallback && isSqlAuthError(err)) {
+            try {
+                const out = await runSqlcmdQuery(`
+                    SET NOCOUNT ON;
+                    SELECT nv.id, nv.SBD, nv.manganh, nv.Thutu, t.tentruong, n.tennganh, n.monxettuyen, n.diemchuan
+                    FROM nguyenvong nv
+                    JOIN nganh n ON nv.manganh = n.manganh
+                    JOIN truongdaihoc t ON n.matruong = t.matruong
+                    WHERE nv.SBD = N'${sbd}'
+                    ORDER BY nv.Thutu
+                    FOR JSON PATH;
+                `);
+                
+                const jsonText = extractJsonFromSqlcmdOutput(out);
+                let nguyenVongList = jsonText ? JSON.parse(jsonText) : [];
+                
+                // Lấy điểm thi bằng sqlcmd
+                if (nguyenVongList.length > 0) {
+                    const diemOut = await runSqlcmdQuery(`
+                        SET NOCOUNT ON;
+                        SELECT MaMon, DiemThi FROM diemthi WHERE SBD = N'${sbd}' FOR JSON PATH;
+                    `);
+                    
+                    const diemJsonText = extractJsonFromSqlcmdOutput(diemOut);
+                    const diemList = diemJsonText ? JSON.parse(diemJsonText) : [];
+                    const diemThiMap = {};
+                    diemList.forEach(d => {
+                        diemThiMap[d.MaMon || d.MAMON] = d.DiemThi || d.DIEMTHI;
+                    });
+                    
+                    // Thêm trạng thái
+                    nguyenVongList = nguyenVongList.map(nv => {
+                        const monXetTuyen = nv.monxettuyen || nv.MONXETTUYEN;
+                        const diemChuan = nv.diemchuan || nv.DIEMCHUAN || 20;
+                        const diemMon = diemThiMap[monXetTuyen] || 0;
+                        const trangThai = diemMon >= diemChuan ? "Đậu" : "Trượt";
+                        
+                        return {
+                            ...nv,
+                            diemMon: diemMon,
+                            diemChuan: diemChuan,
+                            trangThai: trangThai
+                        };
+                    });
+                }
+                
+                return res.json(nguyenVongList);
+            } catch (fallbackErr) {
+                console.log(`[DEBUG] GET /nguyenvong/:sbd error (sqlcmd):`, fallbackErr.message);
+                return res.status(500).json({ message: formatDbError(fallbackErr) });
+            }
+        }
+        
         res.status(500).json({ message: formatDbError(err) });
     }
 });
@@ -1086,9 +1248,15 @@ app.get("/nguyenvong/:sbd", async (req, res) => {
 app.delete("/nguyenvong/:sbd/:manganh", async (req, res) => {
     const sbd = (req.params.sbd || "").trim();
     const manganh = (req.params.manganh || "").trim();
+    const isPaid = req.query.paid === "true";
 
     if (!sbd || !manganh) {
         return res.status(400).json({ message: "Thieu thong tin" });
+    }
+
+    // Kiểm tra nếu đã thanh toán thì không cho phép xóa
+    if (isPaid) {
+        return res.status(403).json({ message: "Bạn đã thanh toán nên không thể xóa nguyện vọng!" });
     }
 
     try {
@@ -1172,6 +1340,22 @@ app.post("/nguyenvong", async (req, res) => {
     if (!sbd || !manganh || !thutu) {
         return res.status(400).json({ message: "Thieu thong tin" });
     }
+
+    // Tạo câu lệnh SQL để lưu vào file
+    const insertSqlForLog = `INSERT INTO nguyenvong (SBD, manganh, Thutu) VALUES (N'${escapeSqlLiteral(sbd)}', N'${escapeSqlLiteral(manganh)}', ${Number(thutu)})`;
+
+    // Ghi vào file updates.sql
+    const updatesFilePath = path.join(__dirname, "updates.sql");
+    const timestamp = new Date().toISOString();
+    const logContent = `-- Thêm nguyện vọng ${timestamp} SBD=${sbd}\n${insertSqlForLog}\nGO\n\n`;
+    
+    try {
+        await fs.promises.appendFile(updatesFilePath, logContent, "utf8");
+        console.log(`[DEBUG] Logged nguyenvong to updates.sql for SBD: ${sbd}`);
+    } catch (fileErr) {
+        console.log(`[DEBUG] Lỗi ghi file updates.sql:`, fileErr.message);
+    }
+
     try {
         const pool = await getPool();
         const duplicateCheck = await pool.request()
@@ -1213,8 +1397,7 @@ app.post("/nguyenvong", async (req, res) => {
 
                 await runSqlcmdQuery(`
                     SET NOCOUNT ON;
-                    INSERT INTO nguyenvong (SBD, manganh, Thutu)
-                    VALUES (N'${escapeSqlLiteral(sbd)}', N'${escapeSqlLiteral(manganh)}', ${Number(thutu)});
+                    ${insertSqlForLog};
                 `);
                 return res.json({ message: "OK" });
             } catch (fallbackErr) {
@@ -1279,7 +1462,7 @@ app.get("/nganh", async (req, res) => {
     } catch (err) {
         if (useSqlcmdFallback && isSqlAuthError(err)) {
             try {
-                // Use sqlcmd with FOR JSON PATH since direct pool failed
+                // Sử dụng sqlcmd với FOR JSON PATH vì pool trực tiếp thất bại
                 const result = await readSqlcmdJsonArray(`
                     SELECT n.manganh, n.matruong, n.tennganh, n.monxettuyen, n.diemchuan, t.tentruong as tentruong_truong
                     FROM nganh n
@@ -1304,7 +1487,7 @@ app.get("/nganh/:matruong", async (req, res) => {
     try {
         const rawMatruong = (req.params.matruong || "").trim();
         if (removedMatruong.has(rawMatruong)) {
-            // Explicitly return empty list for removed schools
+            // Rõ ràng trả về danh sách trống cho các trường bị xóa
             return res.json([]);
         }
         const matruong = escapeSqlLiteral(rawMatruong);
@@ -1336,12 +1519,12 @@ app.get("/userinfo/:sbd", async (req, res) => {
         `);
         console.log(`[DEBUG] sqlcmd payload:`, payload);
         
-        // Handle both array and single object (from WITHOUT_ARRAY_WRAPPER)
+        // Xử lý cả mảng và đối tượng đơn lẻ (từ WITHOUT_ARRAY_WRAPPER)
         if (!payload) {
             return res.status(404).json({ message: "Không tìm thấy thí sinh" });
         }
         
-        // If array, use first element; if object, use directly
+        // Nếu là mảng, sử dụng phần tử đầu tiên; nếu là đối tượng, sử dụng trực tiếp
         const result = Array.isArray(payload) ? payload[0] : payload;
         if (!result) {
             return res.status(404).json({ message: "Không tìm thấy thí sinh" });
@@ -1351,7 +1534,7 @@ app.get("/userinfo/:sbd", async (req, res) => {
         return res.json(normalized);
     } catch (err) {
         console.log(`[DEBUG] sqlcmd error:`, err.message);
-        // fallthrough to pool
+        // rơi qua pool
     }
 
     try {
@@ -1433,6 +1616,21 @@ app.post("/thisinh/:sbd/priority", upload.single('priorityFile'), async (req, re
         // Lưu file name vào database
         const fileName = req.file.filename;
         
+        // Tạo câu lệnh SQL để lưu vào file
+        const updateSqlForLog = `UPDATE thisinh SET hoten=N'${escapeSqlLiteral(hoten)}', ngaysinh=N'${escapeSqlLiteral(ngaysinh)}', CCCD=N'${escapeSqlLiteral(cccd)}', sdt=N'${escapeSqlLiteral(sdt)}', quequan=N'${escapeSqlLiteral(quequan)}', huyenCode=N'${escapeSqlLiteral(huyenCode)}', xaCode=N'${escapeSqlLiteral(xaCode)}', gender=N'${escapeSqlLiteral(gender)}', priorityCode=N'${escapeSqlLiteral(priorityCode)}', diachi=N'${escapeSqlLiteral(diachi)}', namthi=${namthi || "NULL"}, diadiemthi=N'${escapeSqlLiteral(diadiemthi || "")}', priorityFile=N'${escapeSqlLiteral(fileName)}', priorityStatus=N'Chờ xác nhận' WHERE SBD=N'${escapeSqlLiteral(sbd)}'`;
+
+        // Ghi vào file updates.sql
+        const updatesFilePath = path.join(__dirname, "updates.sql");
+        const timestamp = new Date().toISOString();
+        const logContent = `-- Cập nhật ưu tiên ${timestamp} SBD=${sbd} File=${fileName}\n${updateSqlForLog}\nGO\n\n`;
+        
+        try {
+            await fs.promises.appendFile(updatesFilePath, logContent, "utf8");
+            console.log(`[DEBUG] Logged priority update to updates.sql for SBD: ${sbd}`);
+        } catch (fileErr) {
+            console.log(`[DEBUG] Lỗi ghi file updates.sql:`, fileErr.message);
+        }
+        
         // Cập nhật database
         const query = `
             UPDATE thisinh 
@@ -1463,7 +1661,7 @@ app.post("/thisinh/:sbd/priority", upload.single('priorityFile'), async (req, re
             result = await readSqlcmdJsonArray(query);
         } catch (err) {
             console.log(`[DEBUG] sqlcmd error for priority update:`, err.message);
-            // Fallback to pool
+            // Quay lại pool
         }
         
         if (!result) {
@@ -1517,7 +1715,7 @@ app.post("/thisinh/:sbd/priority", upload.single('priorityFile'), async (req, re
         });
     } catch (err) {
         console.log(`[DEBUG] Priority update error:`, err.message);
-        // Try to delete the uploaded file on error
+        // Cố gắng xóa file đã tải lên khi có lỗi
         if (req.file && fs.existsSync(req.file.path)) {
             try {
                 fs.unlinkSync(req.file.path);
@@ -1539,9 +1737,9 @@ process.on('unhandledRejection', (reason, promise) => {
     console.error('Promise:', promise);
 });
 
-// DEBUG endpoint
+// Điểm cuối DEBUG
 app.get('/debug/login', (req, res) => {
-    // Check query params
+    // Kiểm tra các tham số truy vấn
     const sbd = req.query.sbd || "";
     const hoten = req.query.hoten || "";
     res.json({
@@ -1567,11 +1765,11 @@ const server = app.listen(PORT, () => {
     }
 });
 
-// Graceful Shutdown - Đóng connections sạch sẽ khi tắt
+// Tắt máy chủ Graceful - Đóng connections sạch sẽ khi tắt
 const gracefulShutdown = async () => {
     console.log('\n⏹️ Đang tắt server...');
     
-    // Close SQL Server pool
+    // Đóng pool SQL Server
     try {
         if (poolPromise && typeof poolPromise.then === 'function') {
             const pool = await poolPromise;
@@ -1584,7 +1782,7 @@ const gracefulShutdown = async () => {
         console.error('Lỗi khi đóng SQL connection:', err.message);
     }
     
-    // Close HTTP server
+    // Đóng máy chủ HTTP
     return new Promise((resolve) => {
         server.close(() => {
             console.log('✓ Đóng HTTP server');

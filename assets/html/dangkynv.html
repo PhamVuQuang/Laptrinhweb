@@ -99,8 +99,14 @@
                     </ul>
                 </div>
                 </li>
-                    <li class="navbar__page">Đăng Kí Nguyện Vọng</li>
-                    <li class="navbar__page">Thanh Toán</li>
+                    <li class="navbar__page"
+                        onclick="location.href='dangkynv.html'">
+                        Đăng Kí Nguyện Vọng
+                    </li>
+                    <li class="navbar__page"
+                        onclick="location.href='thanhtoan.html'">
+                        Thanh Toán
+                    </li>
                 </ul>
                 <ul class="navbar__homepage navbar__page-right">
                     <li class="navbar__page">
@@ -157,7 +163,6 @@
                 <th>STT</th>
                 <th>Trường</th>
                 <th>Ngành</th>
-                <th>Tổ hợp</th>
                 <th>Thao tác</th>
             </tr>
         </thead>
@@ -361,7 +366,6 @@ async function hienThiNV(sbd){
                     <td>${index + 1}</td>
                     <td>${nv.tentruong}</td>
                     <td>${nv.tennganh}</td>
-                    <td>${nv.monxettuyen || "Chưa cập nhật"}</td>
                     <td>
                         <button type="button" onclick="xoaNguyenVong('${sbd}', '${nv.manganh}')">Xóa</button>
                     </td>
@@ -377,12 +381,19 @@ async function hienThiNV(sbd){
 }
 
 async function xoaNguyenVong(sbd, manganh){
+    // Kiểm tra xem đã thanh toán chưa
+    const isPaid = localStorage.getItem(`paymentDone_${sbd}`) === "true";
+    if(isPaid){
+        alert("Bạn đã thanh toán nên không thể xóa nguyện vọng!");
+        return;
+    }
+
     if(!confirm("Bạn có chắc muốn xóa nguyện vọng này không?")){
         return;
     }
 
     try {
-        const res = await fetch(`/nguyenvong/${encodeURIComponent(sbd)}/${encodeURIComponent(manganh)}`, {
+        const res = await fetch(`/nguyenvong/${encodeURIComponent(sbd)}/${encodeURIComponent(manganh)}?paid=${isPaid}`, {
             method: "DELETE"
         });
 

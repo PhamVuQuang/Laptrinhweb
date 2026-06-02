@@ -266,10 +266,10 @@ async function traCuu(){
             if (subjectNameMap[code]) {
                 return subjectNameMap[code];
             }
-            // Fix common mojibake in browser where UTF-8 bytes became Latin-1 string
+            // Sửa mojibake phổ biến trong trình duyệt khi byte UTF-8 trở thành chuỗi Latin-1
             function fixMojibakeBrowser(s) {
                 try {
-                    // decodeURIComponent(escape(s)) reinterprets Latin-1 bytes as UTF-8
+                    // decodeURIComponent(escape(s)) giải thích lại byte Latin-1 thành UTF-8
                     // eslint-disable-next-line no-undef
                     return decodeURIComponent(escape(s));
                 } catch (e) {

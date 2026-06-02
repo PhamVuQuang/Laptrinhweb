@@ -97,7 +97,10 @@
                     onclick="location.href='dangkynv.html'">
                     Đăng Kí Nguyện Vọng
                 </li>
-                <li class="navbar__page">Thanh Toán</li>
+                <li class="navbar__page"
+                    onclick="location.href='thanhtoan.html'">
+                    Thanh Toán
+                </li>
             </ul>
 
             <ul class="navbar__homepage navbar__page-right">
@@ -128,7 +131,6 @@
                     <th>Nguyện Vọng</th>
                     <th>Trường</th>
                     <th>Ngành</th>
-                    <th>Tổ Hợp</th>
                     <th>Trạng Thái</th>
                 </tr>
                 <tbody id="bangNV"></tbody>
@@ -231,7 +233,6 @@ async function traCuuNV(){
                     <td>${item.Thutu || 1}</td>
                     <td>${item.tentruong || ""}</td>
                     <td>${item.tennganh || ""}</td>
-                    <td>${item.monxettuyen || "Chưa cập nhật"}</td>
                     <td>${trangThai}</td>
                 </tr>
             `;

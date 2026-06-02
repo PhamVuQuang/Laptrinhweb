@@ -2,7 +2,7 @@ const { execFileSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
-// Data to insert
+// Dữ liệu để chèn
 const monthi = [
     ['TOAN', 'Toán'],
     ['VAN', 'Văn'],
@@ -67,17 +67,17 @@ async function execAsync(cmd, args) {
 async function main() {
     console.log('Creating database...');
     
-    // Drop and recreate
+    // Xóa và tạo lại
     try {
         await execAsync('sqlcmd', ['-S', 'localhost', '-Q', `IF EXISTS (SELECT * FROM sys.databases WHERE name = 'tracuudiemthi') BEGIN ALTER DATABASE tracuudiemthi SET SINGLE_USER WITH ROLLBACK IMMEDIATE; DROP DATABASE tracuudiemthi; END`]);
     } catch (e) {
         console.log('Drop output:', e.message);
     }
     
-    // Create database
+    // Tạo cơ sở dữ liệu
     await execAsync('sqlcmd', ['-S', 'localhost', '-Q', 'CREATE DATABASE tracuudiemthi']);
     
-    // Create tables
+    // Tạo bảng
     const createTablesSQL = `
 USE tracuudiemthi;
 

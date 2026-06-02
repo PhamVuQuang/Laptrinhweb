@@ -1,6 +1,0 @@
-JSON_F52E2B61-18A1-11d1-B105-00805F49916B                                                                                                                                                                                                                       
-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-[{"matruong":"BKH","tentruong":"ÐH Bách Khoa","diem_san":2.200000000000000e+001},{"matruong":"CDCT","tentruong":"Cao Ð?ng Công Thuong","diem_san":1.350000000000000e+001},{"matruong":"CDE","tentruong":"Cao Ð?ng Kinh T? Ð?i Ngo?i","diem_san":1.45000000000000
-000000e+001},{"matruong":"NTT","tentruong":"ÐH Nguy?n T?t Thành","diem_san":1.500000000000000e+001},{"matruong":"SP","tentruong":"ÐH Su Ph?m","diem_san":1.950000000000000e+001},{"matruong":"SPKT","tentruong":"ÐH Su Ph?m K? Thu?t","diem_san":2.1000000000000
-
-(2 rows affected)

@@ -197,7 +197,9 @@
                         <li class="navbar__page"
                         onclick="location.href='dangkynv.html'">
                         Đăng Kí Nguyện Vọng</li>
-                        <li class="navbar__page">Thanh Toán</li>
+                        <li class="navbar__page"
+                        onclick="location.href='thanhtoan.html'">
+                        Thanh Toán</li>
                     </ul>
                     <ul class="navbar__homepage navbar__page-right">
                         <li class="navbar__page">
@@ -448,25 +450,25 @@
                 priorityCode.value = user?.priorityCode || "";
                 if(namthi) namthi.value = user?.namthi || "";
                 if(diadiemthi) diadiemthi.value = user?.diadiemthi || "";
-                // Trigger change so file upload visibility updates
+                // Kích hoạt thay đổi để cập nhật khính thị tải file
                 priorityCode.dispatchEvent(new Event('change'));
                 if(truong) truong.value = user?.truong || "";
                 
-                // Reset district and commune first
+                // đặt lại huyện và xã đầu tiên
                 huyen.value = "";
                 xa.value = "";
                 huyen.innerHTML = '<option value="">-- Chọn quận/huyện --</option>';
                 xa.innerHTML = '<option value="">-- Chọn phường/xã --</option>';
                 
-                // Trigger district load if province is selected
+                // Kích hoạt tải quận nếu tỉnh được chọn
                 if(user?.quequan) {
                     tinh.dispatchEvent(new Event('change'));
-                    // After provinces load, populate district if available
+                    // Sau khi quận tải, điền huyện nếu có
                     setTimeout(() => {
                         if(user?.huyenCode) {
                             huyen.value = user.huyenCode;
                             huyen.dispatchEvent(new Event('change'));
-                            // After districts load, populate commune if available
+                            // Sau khi huyện tải, điền xã nếu có
                             setTimeout(() => {
                                 if(user?.xaCode) {
                                     xa.value = user.xaCode;
@@ -504,7 +506,7 @@
                 }
             }
 
-            // Helper functions to get province/district/commune names
+            // Hàm trợ giúp để lấy tên tỉnh/huyện/xã
             function getProvinceName(code) {
                 if(!code || !vietnamAdminDivisions) return "-";
                 const prov = vietnamAdminDivisions.provinces?.find(p => p.code === code);
@@ -539,13 +541,13 @@
                 const selectedFile = fileInput && fileInput.files ? fileInput.files[0] : null;
                 const priorityCode = document.getElementById("editPriorityCode").value.trim();
 
-                // Validate: if priority code is selected (not empty) and not "khongco", file is required
+                // Xác thực: nếu mã ưu tiên được chọn (không trống) và không phải "khongco", file là bắt buộc
                 if(priorityCode && priorityCode !== "khongco" && !selectedFile){
                     alert("Vui lòng chọn tài liệu chứng minh ưu tiên!");
                     return;
                 }
 
-                // Check if file is selected and if so, validate it
+                // Kiểm tra xem file có được chọn và nếu có, hãy xác thực nó
                 if(selectedFile){
                     const maxSize = 5 * 1024 * 1024; // 5MB
                     const allowedExts = ['.pdf', '.jpg', '.jpeg', '.png', '.doc', '.docx'];
@@ -561,7 +563,7 @@
                         return;
                     }
 
-                    // Save with file upload via FormData
+                    // Lưu với tải lên file qua FormData
                     const formData = new FormData();
                     formData.append('hoten', document.getElementById("editHoten").value.trim());
                     formData.append('ngaysinh', document.getElementById("editNgaysinh").value);
@@ -591,14 +593,14 @@
                         }
 
                         alert(data.message || "Cập nhật thông tin và gửi xác nhận ưu tiên thành công!");
-                        // Refresh user info
+                        // Làm mới thông tin người dùng
                         await loadUserInfo();
                         toggleEditForm(false);
                     } catch (err) {
                         alert("Lỗi cập nhật: " + err.message);
                     }
                 } else {
-                    // Save without file (original JSON method)
+                    // Lưu mà không có file (ưu tiên JSON ban đầu)
                     const payload = {
                         hoten: document.getElementById("editHoten").value.trim(),
                         ngaysinh: document.getElementById("editNgaysinh").value,
@@ -615,7 +617,7 @@
                         diadiemthi: document.getElementById("editDiadiemthi")?.value || ""
                     };
 
-                    // Validate required fields only
+                    // Chỉ xác thực các trường bắt buộc
                     if(!payload.hoten || !payload.ngaysinh || !payload.cccd || !payload.sdt){
                         alert("Vui lòng nhập đầy đủ thông tin bắt buộc (Họ tên, Ngày sinh, CCCD, Điện thoại)!");
                         return;
@@ -634,7 +636,7 @@
                             return;
                         }
 
-                        // Update display
+                        // Cập nhật hiển thị
                         document.getElementById("userNameCell").innerText = payload.hoten;
                         document.getElementById("userDobCell").innerText = payload.ngaysinh;
                         document.getElementById("userCccdCell").innerText = payload.cccd;
@@ -651,7 +653,7 @@
                         toggleEditForm(false);
                         alert("Cập nhật thông tin thành công!");
                         
-                        // Reload to get fresh data from database
+                        // Tải lại để lấy dữ liệu mới từ cơ sở dữ liệu
                         await loadUserInfo();
                     } catch (err) {
                         alert("Lỗi cập nhật: " + err.message);
@@ -687,19 +689,19 @@
                         document.getElementById("userCccdCell").innerText = thisinh.CCCD || "-";
                         document.getElementById("userPhoneCell").innerText = thisinh.sdt || "-";
                         
-                        // Display province name (convert code to name)
+                        // Hiển thị tên tỉnh (đconvert mã thành tên)
                         const provName = getProvinceName(thisinh.quequan);
                         document.getElementById("userTinhCell").innerText = provName || "-";
                         
-                        // Display district name if huyenCode exists
+                        // Hiển thị tên huyện nếu có huyenCode
                         const distName = (thisinh.quequan && thisinh.huyenCode) ? getDistrictName(thisinh.quequan, thisinh.huyenCode) : "-";
                         document.getElementById("userHuyenCell").innerText = distName;
                         
-                        // Display commune name if xaCode exists
+                        // Hiển thị tên xã nếu có xaCode
                         const commName = (thisinh.quequan && thisinh.huyenCode && thisinh.xaCode) ? getCommuneName(thisinh.quequan, thisinh.huyenCode, thisinh.xaCode) : "-";
                         document.getElementById("userXaCell").innerText = commName;
                         
-                        // Display specific address
+                        // Hiển thị địa chỉ cụ thể
                         document.getElementById("userDiachiCell").innerText = thisinh.diachi || "-";
                         
                         document.getElementById("userTruongCell").innerText = thisinh.truong || "-";
@@ -708,7 +710,7 @@
                         document.getElementById("userNamthiCell").innerText = thisinh.namthi || "-";
                         document.getElementById("userDiadiemthiCell").innerText = thisinh.diadiemthi || "-";
                         
-                        // Store user data globally for later use
+                        // Lưu dữ liệu người dùng toàn cầu để sử dụng sau
                         window.currentUserData = thisinh;
                         
                         syncEditForm(thisinh);
@@ -729,7 +731,7 @@
 
             loadUserInfo();
 
-            // Load provinces on page load
+            // Tải tỉnh khi tải trang
             function loadProvinces() {
                 const tinhSelect = document.getElementById("editTinh");
                 if(!tinhSelect) return;
@@ -740,7 +742,7 @@
                 });
             }
 
-            // Load districts when province is selected
+            // Tải huyện khi tỉnh được chọn
             document.getElementById("editTinh")?.addEventListener("change", function() {
                 const tinhCode = this.value;
                 const huyenSelect = document.getElementById("editHuyen");
@@ -756,7 +758,7 @@
                 }
             });
 
-            // Load communes when district is selected
+            // Tải xã khi huyện được chọn
             document.getElementById("editHuyen")?.addEventListener("change", function() {
                 const tinhCode = document.getElementById("editTinh").value;
                 const huyenCode = this.value;
@@ -771,7 +773,7 @@
                 }
             });
 
-            // Handle file input change
+            // Xử lý thay đổi nhập file
             const priorityFileInput = document.getElementById('priorityFileInput');
             if(priorityFileInput){
                 priorityFileInput.addEventListener('change', function(){
@@ -786,15 +788,15 @@
                 });
             }
 
-            // Show/hide priority file group based on priority selection
+            // Hiển thị/ẩn nhóm tệp ưu tiên dựa trên lựa chọn ưu tiên
             const editPrioritySelect = document.getElementById('editPriorityCode');
             const priorityFileGroup = document.getElementById('priorityFileGroup');
             function updatePriorityFileVisibility(){
                 if(!priorityFileGroup || !editPrioritySelect) return;
                 const v = editPrioritySelect.value;
-                // show file input only when a priority is chosen and it's not 'khongco' or empty
+                // chỉ hiển thị ô nhập file khi đã chọn ưu tiên và nó không phải khongco hoặc trống
                 priorityFileGroup.style.display = (v && v !== 'khongco') ? 'block' : 'none';
-                // clear any previously selected file when not applicable
+                // xóa bất kỳ file nào đã chọn trước đó khi không áp dụng
                 if(!v || v === 'khongco'){
                     if(priorityFileInput){
                         priorityFileInput.value = '';
@@ -806,11 +808,11 @@
 
             if(editPrioritySelect){
                 editPrioritySelect.addEventListener('change', updatePriorityFileVisibility);
-                // initialize visibility on load
+                // khởi tạo khả năng hiển thị khi tải
                 updatePriorityFileVisibility();
             }
 
-            // Initialize provinces on load
+            // Khởi tạo các tỉnh khi tải
             loadProvinces();
         </script>
     </body>

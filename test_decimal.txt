@@ -1,6 +1,0 @@
-JSON_F52E2B61-18A1-11d1-B105-00805F49916B                                                                                                                                                                                                                       
-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-[{"matruong":"BKH","tentruong":"ĐH Bách Khoa","diem_san":22.0},{"matruong":"CDCT","tentruong":"Cao Đẳng Công Thương","diem_san":13.5},{"matruong":"CDE","tentruong":"Cao Đẳng Kinh Tế Đối Ngoại","diem_san":14.5},{"matruong":"CDGTVT","tentru
-"tentruong":"ĐH Tài Nguyên & Môi Trường","diem_san":18.5},{"matruong":"UEF","tentruong":"ĐH Kinh Tế - Tài Chính (UEF)","diem_san":18.0},{"matruong":"VLU","tentruong":"ĐH Văn Lang","diem_san":18.0}]                                             
-
-(2 rows affected)

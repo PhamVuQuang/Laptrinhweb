@@ -9,7 +9,7 @@ const config = {
   }
 };
 
-// Vietnamese major names - these are the CORRECT strings
+// Tên ngành Việt Nam - đây là các chuỗi ĐÚNG
 const majors = [
   { manganh: 'CNTT-BKH-001', matruong: 'BKH', tennganh: 'Công Nghệ Thông Tin', monxettuyen: 'TOAN', diemchuan: 25.0, tentruong: 'ĐH Bách Khoa' },
   { manganh: 'KTDT-BKH-001', matruong: 'BKH', tennganh: 'Kỹ Thuật Điều Khiển', monxettuyen: 'LY', diemchuan: 24.5, tentruong: 'ĐH Bách Khoa' },
@@ -54,11 +54,11 @@ async function insertMajors() {
     
     console.log('Connected to database');
     
-    // Clear existing data
+    // Xóa dữ liệu hiện có
     await pool.request().query('DELETE FROM nganh');
     console.log('Cleared existing nganh data');
     
-    // Insert new data
+    // Chèn dữ liệu mới
     let count = 0;
     for (const major of majors) {
       const request = pool.request();

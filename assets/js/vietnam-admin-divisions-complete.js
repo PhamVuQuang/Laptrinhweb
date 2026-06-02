@@ -1,8 +1,8 @@
 // Dữ liệu đơn vị hành chính Việt Nam - 63 Tỉnh/Thành phố HOÀN CHỈNH
-// Vietnamese Administrative Divisions Complete Data (All 63 Provinces/Cities)
+// Dữ liệu Đơn vị Hành chính Việt Nam Hoàn chỉnh (Tất cả 63 Tỉnh/Thành phố)
 // Includes: All Districts, Comprehensive Sample Communes (2-3+ per major district)
 const vietnamAdminDivisionsComplete = {
-    // All 63 Vietnamese Provinces/Cities (Tỉnh/Thành phố)
+    // Tất cả 63 Tỉnh/Thành phố Việt Nam
     provinces: [
         // Miền Bắc (Northern Region)
         { code: "01", name: "Thành phố Hà Nội", region: "north" },
@@ -78,7 +78,7 @@ const vietnamAdminDivisionsComplete = {
         { code: "96", name: "Tỉnh Cà Mau", region: "mekong" }
     ],
     
-    // Districts organized by Province Code
+    // Các quận/huyện được sắp xếp theo Mã Tỉnh
     districts: {
         // Hà Nội (01)
         "01": [
@@ -831,8 +831,8 @@ const vietnamAdminDivisionsComplete = {
         ]
     },
     
-    // COMPREHENSIVE Communes/Wards organized by Province-District Code (e.g., "01-001")
-    // Includes sample data for 2-3+ major districts per province
+    // Các Phường/Xã TOÀN DIỆN được sắp xếp theo Mã Tỉnh-Quận (ví dụ: 01-001)
+    // Bao gồm dữ liệu mẫu cho 2-3+ quận/huyện chính trên mỗi tỉnh
     communes: {
         // ========== HÀ NỘI (01) ==========
         // Quận Ba Đình (01-001)
@@ -1227,7 +1227,7 @@ const vietnamAdminDivisionsComplete = {
         ]
     },
     
-    // Metadata & Statistics
+    // Siêu dữ liệu và Thống kê
     metadata: {
         version: "2025-COMPLETE",
         totalProvinces: 63,
@@ -1240,7 +1240,7 @@ const vietnamAdminDivisionsComplete = {
     }
 };
 
-// Export for use in browsers and Node.js
+// Xuất để sử dụng trong trình duyệt và Node.js
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = vietnamAdminDivisionsComplete;
 }

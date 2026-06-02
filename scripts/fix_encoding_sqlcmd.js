@@ -42,8 +42,8 @@ async function processColumn(table, key, col){
         const orig = row.orig || '';
         let rawhex = row.rawhex || '';
         if(!rawhex) continue;
-        // rawhex may be truncated by SUBSTRING; try full via fn_varbintohexstr directly
-        // but for simplicity, remove any non-hex
+        // rawhex có thể bị cắt ngắn bởi SUBSTRING; thử đầy đủ qua fn_varbintohexstr trực tiếp
+        // nhưng để đơn giản, hãy xóa bất kỳ ký tự không phải hex nào
         rawhex = rawhex.replace(/[^0-9A-Fa-f]/g,'');
         if(!rawhex) continue;
         const buf = Buffer.from(rawhex, 'hex');
